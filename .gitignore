@@ -1,0 +1,36 @@
+# === Dataset (baixar do Kaggle) ===
+dados/
+*.csv
+
+# === Windows ===
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+ehthumbs.db
+
+# === SQL Server ===
+*.bak
+*.trn
+*.ldf
+*.mdf
+
+# === Power BI ===
+# Cache e temporários (mantém .pbix versionado)
+*.pbix.tmp
+.pbi/
+TempSaves/
+
+# === SSIS / SSAS / Visual Studio ===
+bin/
+obj/
+*.suo
+*.user
+*.dtsx.backup
+*.ispac.tmp
+.vs/
+
+# === Editor / Sistema ===
+.vscode/
+.idea/
+*.swp
+*~

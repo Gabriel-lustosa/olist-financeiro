@@ -58,7 +58,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 ```
 
 **Métrica âncora:** Receita bruta total = **R$ 15.843.553,24** (`SUM(valor_total)` em FatoVendas)
-**Receita realizada** (só pedidos `delivered`): **~R$ 15.364.000** — é essa que entra na análise de retenção.
+**Receita realizada** (só pedidos `delivered`): **R$ 15.419.773,75** — é essa que entra na análise de retenção.
 
 ---
 
@@ -99,7 +99,7 @@ projeto_olist_financeiro/
 ├── 01_sql/          Scripts de criação, carga e análise (SQL Server)
 ├── 02_ssis/         Pacotes de ETL (em construção)
 ├── 03_ssas/         Modelo tabular (em construção)
-├── 04_powerbi/      Relatório .pbix (em construção)
+├── 04_powerbi/      Relatório .pbix + medidas_dax.md (DAX documentado)
 ├── dados/           CSVs Olist (não versionado — baixar do Kaggle)
 └── README.md
 ```
@@ -110,7 +110,7 @@ projeto_olist_financeiro/
 
 - **Modelagem dimensional** — star schema com surrogate keys, chaves degeneradas, dimensão de data gerada por CTE recursiva, coluna calculada persistida (`valor_total`)
 - **SQL avançado** — BULK INSERT com `CODEPAGE 65001` (UTF-8), lookup de SKs via INNER JOIN, CTE recursiva, validações `COUNT(*)`/`SUM()` origem vs. destino
-- **DAX** — colunas calculadas com `VAR` + `CALCULATE` + `FILTER(ALL(...))` pra escapar do contexto de linha, medidas de retenção por coorte, divisão segura com `DIVIDE`
+- **DAX** — colunas calculadas com transição de contexto + `ALLEXCEPT` por `customer_unique_id`, `MINX` + `RELATED` contra relacionamento de direção única, tabelas virtuais com `SUMMARIZE`/`ADDCOLUMNS`, divisão segura com `DIVIDE` ([ver todo o DAX](04_powerbi/medidas_dax.md))
 - **Análise de retenção** — classificação one-shot vs. recorrente, curva de coorte mensal, decomposição de receita
 - **Documentação** — scripts com cabeçalho, convenções explícitas, comentários sobre pegadinhas do dataset (`customer_id` vs. `customer_unique_id`)
 

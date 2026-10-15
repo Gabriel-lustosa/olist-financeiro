@@ -82,6 +82,10 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 
 -- 4) Criar dimensões + FatoVendas (com lookup de SKs)
 04_create_dimensions.sql
+
+-- 5) Análise: recorrência, receita one-shot x recorrente e coorte de aquisição
+--    (gabarito das medidas DAX do Power BI)
+05_analise_recorrencia.sql
 ```
 
 Validação final após rodar todos:

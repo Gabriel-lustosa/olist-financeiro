@@ -147,7 +147,9 @@ olist-financeiro/
 
 ## Dashboards
 
-Em construção. Screenshots e link do relatório publicado serão adicionados quando o dashboard de retenção estiver concluído.
+**Visão Geral** (pronta): manchete com a tese e 4 cartões KPI: Receita One-shot (R$ 14,56 Mi), Receitas Recorrentes (R$ 864,19 Mil), % Receitas One-shot (94,4%) e Taxa de Retenção (3,0%).
+
+Próximas páginas: curva de retenção por coorte, receita por categoria e recorrência por UF. Screenshots serão adicionados quando o dashboard estiver concluído.
 
 ---
 
@@ -158,8 +160,9 @@ Em construção. Screenshots e link do relatório publicado serão adicionados q
 | DW no SQL Server | Pronto |
 | Star schema carregado | Pronto (112.650 linhas em FatoVendas) |
 | Análise SQL de recorrência e coorte | Pronto |
-| Modelo e medidas no Power BI | Em construção |
-| Dashboard Power BI | Em construção (análise de coorte) |
+| Modelo e medidas no Power BI | Pronto |
+| Dashboard Power BI: Visão Geral (KPIs da tese) | Pronto |
+| Dashboard Power BI: coorte, categorias e UF | Em construção |
 | Pacotes SSIS | Planejado |
 | Modelo SSAS Tabular | Planejado |
 

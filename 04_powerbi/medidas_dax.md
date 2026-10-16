@@ -107,6 +107,29 @@ Receitas Recorrentes = CALCULATE( [Receita Realizada], DimCliente[Tipo Cliente] 
 | Soma (= Receita Realizada) | R$ 15.419.773,75 ✅ |
 | **% Receitas One-shot** | **94,4%** |
 
+### Formatos
+
+O formato fica **na medida**, não no visual: assim qualquer cartão, tabela ou gráfico já mostra o número do jeito certo.
+
+| Medida | Formato |
+|---|---|
+| Receita total, Receita Realizada, Receita One-shot, Receitas Recorrentes, Ticket Médio | Moeda R$ (Português – Brasil), 2 casas |
+| Total de Pedidos, Clientes Únicos, Clientes Recorrentes | Número inteiro com separador de milhar |
+| Taxa de Retenção, % Receitas One-shot | Porcentagem, 1 casa |
+
+---
+
+## Página "Visão Geral"
+
+Manchete com a tese + 4 cartões que a comprovam:
+
+| Cartão | Medida | Exibe |
+|---|---|---|
+| 1 | `[Receita One-shot]` | R$ 14,56 Mi |
+| 2 | `[Receitas Recorrentes]` | R$ 864,19 Mil |
+| 3 | `[% Receitas One-shot]` | 94,4% |
+| 4 | `[Taxa de Retenção]` | 3,0% |
+
 ---
 
 ## Colunas calculadas

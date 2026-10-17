@@ -40,8 +40,8 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 |---|---|---|---|
 | 1 | **94,4% da receita vem de clientes one-shot** (R$ 14,5M de R$ 15,4M) | Classificação por `DISTINCTCOUNT(order_id)` sobre pedidos `delivered`, agrupado por `customer_unique_id` | Concluído |
 | 2 | **Nenhuma coorte com 700+ clientes passa de 0,72% de recompra em mês algum**; no mês seguinte à 1ª compra, só 0,48% volta | Matriz de coorte (mês de aquisição × meses depois) com tabela desconectada + `SUMX` por coorte; validada célula a célula contra o SQL (219/219) | Concluído |
-| 3 | Decomposição de receita por categoria | — | Planejado |
-| 4 | Padrão geográfico de recorrência | — | Planejado |
+| 3 | **O problema é do negócio, não da categoria:** todas as categorias com R$ 100 mil+ têm de 88,8% a 98,1% da receita em clientes one-shot | `[% Receitas One-shot]` fatiado por categoria; participação com `REMOVEFILTERS` | Concluído |
+| 4 | **Nordeste retém menos (2,3% vs. 3,1% no Sudeste), mas tem ticket 34% maior** (R$ 201,52 vs. R$ 150,48), com o frete pesando 17,9% da receita (13,2% no Sudeste) | Coluna `Regiao` (`SWITCH(TRUE())`) + `[Taxa de Retenção]`, `[Ticket Médio]` e `[% Frete]` por região | Concluído |
 
 ---
 
@@ -106,7 +106,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 04_create_dimensions.sql
 
 -- 5) Análise: recorrência, receita one-shot x recorrente, coorte de aquisição
---    e matriz de retenção por coorte
+--    matriz de retenção por coorte, receita por categoria e retenção por região
 --    (gabarito das medidas DAX do Power BI)
 05_analise_recorrencia.sql
 ```
@@ -152,7 +152,9 @@ olist-financeiro/
 
 **Retenção por Coorte** (pronta): matriz em mapa de calor com o % de cada coorte de aquisição que voltou a comprar 1 a 20 meses depois.
 
-Próximas páginas: receita por categoria e recorrência por UF. Screenshots serão adicionados quando o dashboard estiver concluído.
+**Categorias e Regiões** (pronta): top 15 categorias com participação na receita e % one-shot; taxa de retenção, ticket e frete por região.
+
+Screenshots serão adicionados em seguida.
 
 ---
 
@@ -166,7 +168,8 @@ Próximas páginas: receita por categoria e recorrência por UF. Screenshots ser
 | Modelo e medidas no Power BI | Pronto |
 | Dashboard Power BI: Visão Geral (KPIs da tese) | Pronto |
 | Dashboard Power BI: Retenção por Coorte | Pronto |
-| Dashboard Power BI: categorias e UF | Em construção |
+| Dashboard Power BI: Categorias e Regiões | Pronto |
+| Screenshots do dashboard no README | Em construção |
 | Pacotes SSIS | Planejado |
 | Modelo SSAS Tabular | Planejado |
 

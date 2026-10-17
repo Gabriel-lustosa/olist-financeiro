@@ -153,4 +153,77 @@ ORDER BY anomes_aquisicao, mes_relativo;
 -- % retenção = clientes_ativos / clientes_ativos do mes_relativo 0 da mesma coorte.
 
 
+-- ---------------------------------------------------------------------
+-- 6) Receita por categoria e peso dos one-shot em cada uma
+-- Gabarito da tabela de categorias (DimProduto[Categoria] no PBI troca
+-- "_" por " " e NULL por "sem categoria"). 74 categorias + sem categoria.
+--   beleza_saude 1.412.089,53 (9,2%; 95,5% one-shot) | relogios_presentes
+--   1.264.333,12 (8,2%; 95,5%) | cama_mesa_banho 1.225.209,26 (7,9%; 90,7%)
+-- Todas as categorias com receita >= 100 mil têm 88,8% a 98,1% one-shot:
+-- o problema de retenção é do negócio, não de uma categoria.
+-- ---------------------------------------------------------------------
+SELECT
+    ISNULL(p.product_category_name, '(sem categoria)')               AS categoria,
+    SUM(f.valor_total)                                               AS receita_realizada,
+    CAST(100.0 * SUM(f.valor_total)
+               / SUM(SUM(f.valor_total)) OVER ()  AS DECIMAL(5,2))   AS pct_da_receita,
+    CAST(100.0 * SUM(CASE WHEN pe.qtd_pedidos < 2 THEN f.valor_total END)
+               / SUM(f.valor_total)               AS DECIMAL(5,2))   AS pct_one_shot
+FROM FatoVendas AS f
+JOIN DimProduto AS p  ON p.sk_produto  = f.sk_produto
+JOIN DimCliente AS dc ON dc.sk_cliente = f.sk_cliente
+JOIN #pessoas   AS pe ON pe.customer_unique_id = dc.customer_unique_id   -- tipo de cliente é da PESSOA, não da categoria
+WHERE f.order_status = 'delivered'
+GROUP BY ISNULL(p.product_category_name, '(sem categoria)')
+ORDER BY receita_realizada DESC;
+
+
+-- ---------------------------------------------------------------------
+-- 7) Retenção, ticket e frete por região
+-- Mesma lógica do DAX: dentro de cada região, recorrente = pessoa com 2+
+-- pedidos entregues NAQUELA região.
+--   Sudeste  63.994 | 3,10% | R$ 150,48 | frete 13,2% | 64,6% da receita
+--   Sul      13.383 | 2,90% | R$ 162,03 | frete 15,0% | 14,5%
+--   Nordeste  8.813 | 2,29% | R$ 201,52 | frete 17,9% | 11,8%
+--   C-Oeste   5.449 | 2,97% | R$ 177,09 | frete 15,0% |  6,5%
+--   Norte     1.742 | 2,70% | R$ 223,46 | frete 18,5% |  2,6%
+-- ---------------------------------------------------------------------
+WITH regiao AS (
+    SELECT sk_cliente, customer_unique_id,
+        CASE
+            WHEN customer_state IN ('SP','RJ','MG','ES')                          THEN 'Sudeste'
+            WHEN customer_state IN ('PR','SC','RS')                               THEN 'Sul'
+            WHEN customer_state IN ('DF','GO','MT','MS')                          THEN 'Centro-Oeste'
+            WHEN customer_state IN ('AC','AP','AM','PA','RO','RR','TO')           THEN 'Norte'
+            WHEN customer_state IN ('AL','BA','CE','MA','PB','PE','PI','RN','SE') THEN 'Nordeste'
+            ELSE '?'
+        END AS regiao
+    FROM DimCliente
+),
+pessoa_regiao AS (
+    SELECT
+        r.regiao,
+        r.customer_unique_id,
+        COUNT(DISTINCT f.order_id)  AS pedidos,
+        SUM(f.valor_total)          AS receita,
+        SUM(f.freight_value)        AS frete
+    FROM FatoVendas AS f
+    JOIN regiao     AS r ON r.sk_cliente = f.sk_cliente
+    WHERE f.order_status = 'delivered'
+    GROUP BY r.regiao, r.customer_unique_id
+)
+SELECT
+    regiao,
+    COUNT(*)                                                       AS clientes_unicos,
+    CAST(100.0 * SUM(CASE WHEN pedidos > 1 THEN 1 ELSE 0 END)
+               / COUNT(*)                     AS DECIMAL(5,2))     AS taxa_retencao_pct,
+    CAST(SUM(receita) / SUM(pedidos)          AS DECIMAL(10,2))    AS ticket_medio,
+    CAST(100.0 * SUM(frete) / SUM(receita)    AS DECIMAL(5,2))     AS pct_frete,
+    CAST(100.0 * SUM(receita)
+               / SUM(SUM(receita)) OVER ()    AS DECIMAL(5,2))     AS pct_da_receita
+FROM pessoa_regiao
+GROUP BY regiao
+ORDER BY clientes_unicos DESC;
+
+
 DROP TABLE #pessoas;

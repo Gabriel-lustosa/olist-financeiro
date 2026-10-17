@@ -145,6 +145,26 @@ Validado contra a seção 5 do `05_analise_recorrencia.sql`: **219 de 219 célul
 | 2018-01 | 6.842 | 0,34% | 0,37% | 0,29% |
 | 2018-04 | 6.582 | 0,59% | 0,30% | 0,24% |
 
+### Participação e frete
+
+```DAX
+% da Receita =
+    DIVIDE(
+        [Receita Realizada],
+        CALCULATE( [Receita Realizada], REMOVEFILTERS( DimProduto ), REMOVEFILTERS( DimCliente ) ) )
+```
+Fatia da receita realizada que cabe à linha (categoria ou região). O denominador apaga os filtros de produto e cliente, então é sempre o total (R$ 15,4 Mi).
+
+> Por que não `ALLSELECTED()`: a tabela de categorias tem filtro **Top 15** no visual, e o `ALLSELECTED` respeitaria esse filtro, fazendo o total virar a soma das 15. O `REMOVEFILTERS` explícito não cai nessa.
+
+```DAX
+% Frete =
+    DIVIDE(
+        CALCULATE( SUM( FatoVendas[freight_value] ), FatoVendas[order_status] = "delivered" ),
+        [Receita Realizada] )
+```
+Quanto da receita realizada é frete. → **13,2%** no Sudeste, **17,9%** no Nordeste.
+
 ### Formatos
 
 O formato fica **na medida**, não no visual: assim qualquer cartão, tabela ou gráfico já mostra o número do jeito certo.
@@ -153,7 +173,7 @@ O formato fica **na medida**, não no visual: assim qualquer cartão, tabela ou 
 |---|---|
 | Receita total, Receita Realizada, Receita One-shot, Receitas Recorrentes, Ticket Médio | Moeda R$ (Português – Brasil), 2 casas |
 | Total de Pedidos, Clientes Únicos, Clientes Recorrentes, Tamanho Coorte, Clientes Ativos Coorte | Número inteiro |
-| Taxa de Retenção, % Receitas One-shot | Porcentagem, 1 casa |
+| Taxa de Retenção, % Receitas One-shot, % da Receita, % Frete | Porcentagem, 1 casa |
 | % Retenção Coorte | Porcentagem, 2 casas (os valores ficam abaixo de 1%) |
 
 ---
@@ -178,6 +198,26 @@ Matriz: **Linhas** `DimCliente[AnoMes Aquisicao]` · **Colunas** `Meses Relativo
 - Filtro no visual: `Mes Relativo >= 1` (o mês 0 é sempre 100% e apagaria a escala de cor).
 - Subtotais de linha e de coluna desligados: a média distorce, porque as coortes recentes ainda não tiveram tempo de voltar.
 - Mapa de calor: gradiente de **0** (branco) a **0,01 = 1%** (`#B03A2E`), com máximo fixo para as coortes de 2016 (1 pessoa só) não dominarem a escala.
+
+## Página "Categorias e Regiões"
+
+Manchete: *O problema é do negócio, não da categoria: todas as grandes categorias têm 89% ou mais da receita em clientes one-shot. Nordeste retém menos (2,3% vs. 3,1% no Sudeste), mas tem ticket 34% maior, com o frete pesando 17,9% da receita.*
+
+| Visual | Campos | Detalhes |
+|---|---|---|
+| Tabela de categorias | `Categoria`, `[Receita Realizada]`, `[% da Receita]`, `[% Receitas One-shot]` | Top 15 por Receita Realizada; barras de dados na receita |
+| Colunas | `Regiao` × `[Taxa de Retenção]` | Ordenado por taxa, com rótulos |
+| Tabela de regiões | `Regiao`, `[Clientes Únicos]`, `[Taxa de Retenção]`, `[Ticket Médio]`, `[% Frete]`, `[% da Receita]` | Ordenada por clientes |
+
+| Região | Clientes Únicos | Taxa de Retenção | Ticket Médio | % Frete | % da Receita |
+|---|---|---|---|---|---|
+| Sudeste | 63.994 | 3,1% | R$ 150,48 | 13,2% | 64,6% |
+| Sul | 13.383 | 2,9% | R$ 162,03 | 15,0% | 14,5% |
+| Nordeste | 8.813 | 2,3% | R$ 201,52 | 17,9% | 11,8% |
+| Centro-Oeste | 5.449 | 3,0% | R$ 177,09 | 15,0% | 6,5% |
+| Norte | 1.742 | 2,7% | R$ 223,46 | 18,5% | 2,6% |
+
+Validado contra as seções 6 e 7 do `05_analise_recorrencia.sql`.
 
 ---
 
@@ -250,6 +290,31 @@ AnoMes        = FORMAT( DimData[data_completa], "YYYY-MM" )
 AnoMes Numero = YEAR( DimData[data_completa] ) * 100 + MONTH( DimData[data_completa] )
 ```
 Nos dois pares (`AnoMes` e `AnoMes Aquisicao`), a coluna de texto está configurada com **Classificar por coluna** apontando para a versão `Numero`. Assim os meses ficam em ordem cronológica nos visuais, sem depender da ordem alfabética do texto.
+
+### `DimProduto[Categoria]`
+
+```DAX
+Categoria =
+    VAR C = DimProduto[product_category_name]
+    RETURN
+        IF( ISBLANK( C ) || C = "", "sem categoria",
+            SUBSTITUTE( C, "_", " " ) )
+```
+`cama_mesa_banho` → `cama mesa banho`; produtos sem categoria viram "sem categoria" (R$ 197.695,69 de receita realizada) em vez de linha em branco.
+
+### `DimCliente[Regiao]`
+
+```DAX
+Regiao =
+    SWITCH( TRUE(),
+        DimCliente[customer_state] IN { "SP", "RJ", "MG", "ES" }, "Sudeste",
+        DimCliente[customer_state] IN { "PR", "SC", "RS" }, "Sul",
+        DimCliente[customer_state] IN { "DF", "GO", "MT", "MS" }, "Centro-Oeste",
+        DimCliente[customer_state] IN { "AC", "AP", "AM", "PA", "RO", "RR", "TO" }, "Norte",
+        DimCliente[customer_state] IN { "AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE" }, "Nordeste",
+        "?" )
+```
+`SWITCH( TRUE(), ...)` devolve a primeira condição verdadeira. O `"?"` é trava: nenhuma linha caiu nele (todas as 27 UFs mapeadas).
 
 ### `DimData[Mes Indice]` e `DimCliente[Aquisicao Mes Indice]`
 

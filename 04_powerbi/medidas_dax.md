@@ -107,6 +107,44 @@ Receitas Recorrentes = CALCULATE( [Receita Realizada], DimCliente[Tipo Cliente] 
 | Soma (= Receita Realizada) | R$ 15.419.773,75 ✅ |
 | **% Receitas One-shot** | **94,4%** |
 
+### Retenção por coorte
+
+```DAX
+Tamanho Coorte =
+    CALCULATE( [Clientes Únicos], REMOVEFILTERS( DimData ) )
+```
+Quantas pessoas a coorte tem. O `REMOVEFILTERS(DimData)` impede que um filtro de data encolha a coorte.
+
+```DAX
+Clientes Ativos Coorte =
+    VAR K = SELECTEDVALUE( 'Meses Relativos'[Mes Relativo] )
+    RETURN
+        IF( NOT ISBLANK( K ),
+            SUMX(
+                VALUES( DimCliente[Aquisicao Mes Indice] ),
+                VAR Coorte = DimCliente[Aquisicao Mes Indice]
+                RETURN
+                    CALCULATE(
+                        [Clientes Únicos],
+                        DimData[Mes Indice] = Coorte + K ) ) )
+```
+- `K` vem da tabela desconectada `Meses Relativos` (a coluna da matriz).
+- O `SUMX` percorre as coortes do contexto (uma por linha da matriz; todas num total).
+- Para cada coorte, o `CALCULATE` faz a transição de contexto (prende a contagem às pessoas da coorte) e troca o filtro de data para o mês `Coorte + K`. O `[Clientes Únicos]` é reaproveitado.
+
+```DAX
+% Retenção Coorte = DIVIDE( [Clientes Ativos Coorte], [Tamanho Coorte] )
+```
+
+Validado contra a seção 5 do `05_analise_recorrencia.sql`: **219 de 219 células iguais**, 23 coortes somando **93.358** pessoas.
+
+| Coorte | Tamanho | Mês 1 | Mês 2 | Mês 3 |
+|---|---|---|---|---|
+| 2017-08 | 4.057 | 0,69% | 0,35% | 0,27% |
+| 2017-11 | 7.060 | 0,57% | 0,37% | 0,17% |
+| 2018-01 | 6.842 | 0,34% | 0,37% | 0,29% |
+| 2018-04 | 6.582 | 0,59% | 0,30% | 0,24% |
+
 ### Formatos
 
 O formato fica **na medida**, não no visual: assim qualquer cartão, tabela ou gráfico já mostra o número do jeito certo.
@@ -114,8 +152,9 @@ O formato fica **na medida**, não no visual: assim qualquer cartão, tabela ou 
 | Medida | Formato |
 |---|---|
 | Receita total, Receita Realizada, Receita One-shot, Receitas Recorrentes, Ticket Médio | Moeda R$ (Português – Brasil), 2 casas |
-| Total de Pedidos, Clientes Únicos, Clientes Recorrentes | Número inteiro com separador de milhar |
+| Total de Pedidos, Clientes Únicos, Clientes Recorrentes, Tamanho Coorte, Clientes Ativos Coorte | Número inteiro |
 | Taxa de Retenção, % Receitas One-shot | Porcentagem, 1 casa |
+| % Retenção Coorte | Porcentagem, 2 casas (os valores ficam abaixo de 1%) |
 
 ---
 
@@ -129,6 +168,14 @@ Manchete com a tese + 4 cartões que a comprovam:
 | 2 | `[Receitas Recorrentes]` | R$ 864,19 Mil |
 | 3 | `[% Receitas One-shot]` | 94,4% |
 | 4 | `[Taxa de Retenção]` | 3,0% |
+
+## Página "Retenção por Coorte"
+
+Matriz: **Linhas** `DimCliente[AnoMes Aquisicao]` · **Colunas** `Meses Relativos[Mes Relativo]` · **Valores** `[% Retenção Coorte]`.
+
+- Filtro no visual: `Mes Relativo >= 1` (o mês 0 é sempre 100% e apagaria a escala de cor).
+- Subtotais de linha e de coluna desligados: a média distorce, porque as coortes recentes ainda não tiveram tempo de voltar.
+- Mapa de calor: gradiente de **0** (branco) a **0,01 = 1%** (`#B03A2E`), com máximo fixo para as coortes de 2016 (1 pessoa só) não dominarem a escala.
 
 ---
 
@@ -201,3 +248,30 @@ AnoMes        = FORMAT( DimData[data_completa], "YYYY-MM" )
 AnoMes Numero = YEAR( DimData[data_completa] ) * 100 + MONTH( DimData[data_completa] )
 ```
 Nos dois pares (`AnoMes` e `AnoMes Aquisicao`), a coluna de texto está configurada com **Classificar por coluna** apontando para a versão `Numero`. Assim os meses ficam em ordem cronológica nos visuais, sem depender da ordem alfabética do texto.
+
+### `DimData[Mes Indice]` e `DimCliente[Aquisicao Mes Indice]`
+
+```DAX
+Mes Indice = YEAR( DimData[data_completa] ) * 12 + MONTH( DimData[data_completa] )
+```
+
+```DAX
+Aquisicao Mes Indice =
+    VAR N = DimCliente[AnoMes Aquisicao Numero]
+    RETURN
+        IF( ISBLANK( N ), BLANK(),
+            INT( N / 100 ) * 12 + MOD( N, 100 ) )
+```
+Os meses viram números consecutivos para que a distância entre dois meses seja uma subtração: com AAAAMM, `201801 − 201711 = 90`; com o índice, `24.217 − 24.215 = 2`. Base da medida `[Clientes Ativos Coorte]`.
+
+---
+
+## Tabelas calculadas
+
+### `Meses Relativos`
+
+```DAX
+Meses Relativos =
+    SELECTCOLUMNS( GENERATESERIES( 0, 20, 1 ), "Mes Relativo", [Value] )
+```
+Régua de 0 a 20 ("meses depois da aquisição"; 20 é a maior distância nos dados). **Desconectada de propósito**: não tem relacionamento; só desenha as colunas da matriz e a medida lê o valor com `SELECTEDVALUE`.

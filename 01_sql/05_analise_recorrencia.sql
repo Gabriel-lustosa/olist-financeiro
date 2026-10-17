@@ -113,4 +113,44 @@ GROUP BY YEAR(data_primeira_compra) * 100 + MONTH(data_primeira_compra)
 ORDER BY anomes_aquisicao;
 
 
+-- ---------------------------------------------------------------------
+-- 5) Matriz de retenção por coorte
+-- Para cada coorte (mês da 1ª compra entregue) e cada K = meses depois
+-- da aquisição: quantas pessoas da coorte tiveram pedido entregue no mês
+-- coorte + K. Gabarito de [Clientes Ativos Coorte] / [% Retenção Coorte].
+--
+-- Mês vira índice (ano * 12 + mês) para a distância ser uma subtração:
+-- 201801 - 201711 = 90 (errado); 24.217 - 24.215 = 2 (certo).
+--
+-- Esperado: 219 células com alguém ativo; K máximo = 20; soma de K = 0
+-- = 93.358. Exemplos: 2017-11 (7.060 pessoas) -> mês 1: 40 (0,57%);
+-- 2017-10 -> mês 1: 31 (0,72%), a maior célula entre coortes >= 700
+-- pessoas. Retenção ponderada no mês 1: 421 / 87.214 = 0,48%
+-- (exclui 2018-08, que ainda não teve um mês 1 nos dados).
+-- ---------------------------------------------------------------------
+WITH compras AS (   -- uma linha por pessoa x mês com pedido entregue
+    SELECT DISTINCT
+        dc.customer_unique_id,
+        YEAR(dd.data_completa) * 12 + MONTH(dd.data_completa)  AS mes_indice
+    FROM FatoVendas AS f
+    JOIN DimCliente AS dc ON dc.sk_cliente = f.sk_cliente
+    JOIN DimData    AS dd ON dd.sk_data    = f.sk_data
+    WHERE f.order_status = 'delivered'
+),
+aquisicao AS (      -- mês da 1ª compra de cada pessoa
+    SELECT customer_unique_id, MIN(mes_indice) AS aquisicao_indice
+    FROM compras
+    GROUP BY customer_unique_id
+)
+SELECT
+    (a.aquisicao_indice - 1) / 12 * 100 + (a.aquisicao_indice - 1) % 12 + 1  AS anomes_aquisicao,
+    c.mes_indice - a.aquisicao_indice                                      AS mes_relativo,
+    COUNT(DISTINCT c.customer_unique_id)                                   AS clientes_ativos
+FROM compras   AS c
+JOIN aquisicao AS a ON a.customer_unique_id = c.customer_unique_id
+GROUP BY a.aquisicao_indice, c.mes_indice - a.aquisicao_indice
+ORDER BY anomes_aquisicao, mes_relativo;
+-- % retenção = clientes_ativos / clientes_ativos do mes_relativo 0 da mesma coorte.
+
+
 DROP TABLE #pessoas;

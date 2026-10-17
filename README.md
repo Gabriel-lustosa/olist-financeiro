@@ -39,7 +39,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 | # | Descoberta | Como foi medido | Status |
 |---|---|---|---|
 | 1 | **94,4% da receita vem de clientes one-shot** (R$ 14,5M de R$ 15,4M) | Classificação por `DISTINCTCOUNT(order_id)` sobre pedidos `delivered`, agrupado por `customer_unique_id` | Concluído |
-| 2 | Curva de retenção mensal (coorte de aquisição) | Já calculada em SQL (`05_analise_recorrencia.sql`); visual no Power BI em construção | Em construção |
+| 2 | **Nenhuma coorte com 700+ clientes passa de 0,72% de recompra em mês algum**; no mês seguinte à 1ª compra, só 0,48% volta | Matriz de coorte (mês de aquisição × meses depois) com tabela desconectada + `SUMX` por coorte; validada célula a célula contra o SQL (219/219) | Concluído |
 | 3 | Decomposição de receita por categoria | — | Planejado |
 | 4 | Padrão geográfico de recorrência | — | Planejado |
 
@@ -105,7 +105,8 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 -- 4) Criar dimensões + FatoVendas (com lookup de SKs)
 04_create_dimensions.sql
 
--- 5) Análise: recorrência, receita one-shot x recorrente e coorte de aquisição
+-- 5) Análise: recorrência, receita one-shot x recorrente, coorte de aquisição
+--    e matriz de retenção por coorte
 --    (gabarito das medidas DAX do Power BI)
 05_analise_recorrencia.sql
 ```
@@ -149,7 +150,9 @@ olist-financeiro/
 
 **Visão Geral** (pronta): manchete com a tese e 4 cartões KPI: Receita One-shot (R$ 14,56 Mi), Receitas Recorrentes (R$ 864,19 Mil), % Receitas One-shot (94,4%) e Taxa de Retenção (3,0%).
 
-Próximas páginas: curva de retenção por coorte, receita por categoria e recorrência por UF. Screenshots serão adicionados quando o dashboard estiver concluído.
+**Retenção por Coorte** (pronta): matriz em mapa de calor com o % de cada coorte de aquisição que voltou a comprar 1 a 20 meses depois.
+
+Próximas páginas: receita por categoria e recorrência por UF. Screenshots serão adicionados quando o dashboard estiver concluído.
 
 ---
 
@@ -162,7 +165,8 @@ Próximas páginas: curva de retenção por coorte, receita por categoria e reco
 | Análise SQL de recorrência e coorte | Pronto |
 | Modelo e medidas no Power BI | Pronto |
 | Dashboard Power BI: Visão Geral (KPIs da tese) | Pronto |
-| Dashboard Power BI: coorte, categorias e UF | Em construção |
+| Dashboard Power BI: Retenção por Coorte | Pronto |
+| Dashboard Power BI: categorias e UF | Em construção |
 | Pacotes SSIS | Planejado |
 | Modelo SSAS Tabular | Planejado |
 

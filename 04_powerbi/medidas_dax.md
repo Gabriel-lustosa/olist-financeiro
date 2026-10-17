@@ -196,6 +196,7 @@ Manchete: *Menos de 1% dos clientes volta a comprar em qualquer mês após a 1ª
 Matriz: **Linhas** `DimCliente[AnoMes Aquisicao]` · **Colunas** `Meses Relativos[Mes Relativo]` · **Valores** `[% Retenção Coorte]`.
 
 - Filtro no visual: `Mes Relativo >= 1` (o mês 0 é sempre 100% e apagaria a escala de cor).
+- Filtro no visual: `AnoMes Aquisicao` sem 2016-09, 2016-10 e 2016-12 (1, 262 e 1 pessoa). Com 1 pessoa, uma volta já vira 100% e contradiz a manchete.
 - Subtotais de linha e de coluna desligados: a média distorce, porque as coortes recentes ainda não tiveram tempo de voltar.
 - Mapa de calor: gradiente de **0** (branco) a **0,01 = 1%** (`#B03A2E`), com máximo fixo para as coortes de 2016 (1 pessoa só) não dominarem a escala.
 

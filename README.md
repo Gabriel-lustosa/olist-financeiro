@@ -129,7 +129,7 @@ olist-financeiro/
 ├── 01_sql/          Scripts de criação, carga e análise (SQL Server)
 ├── 02_ssis/         Pacotes de ETL (planejado)
 ├── 03_ssas/         Modelo tabular (planejado)
-├── 04_powerbi/      Relatório .pbix + medidas_dax.md (DAX documentado)
+├── 04_powerbi/      Relatório .pbix + medidas_dax.md (DAX documentado) + img/ (prints)
 ├── dados/           CSVs Olist (não versionado — baixar do Kaggle)
 └── README.md
 ```
@@ -148,13 +148,20 @@ olist-financeiro/
 
 ## Dashboards
 
-**Visão Geral** (pronta): manchete com a tese e 4 cartões KPI: Receita One-shot (R$ 14,56 Mi), Receitas Recorrentes (R$ 864,19 Mil), % Receitas One-shot (94,4%) e Taxa de Retenção (3,0%).
+### 1. Visão Geral
+A tese em uma tela: manchete e 4 cartões KPI.
 
-**Retenção por Coorte** (pronta): matriz em mapa de calor com o % de cada coorte de aquisição que voltou a comprar 1 a 20 meses depois.
+![Visão Geral](04_powerbi/img/visao_geral.png)
 
-**Categorias e Regiões** (pronta): top 15 categorias com participação na receita e % one-shot; taxa de retenção, ticket e frete por região.
+### 2. Retenção por Coorte
+Mapa de calor com o % de cada coorte de aquisição (mês da 1ª compra) que voltou a comprar 1 a 19 meses depois. As coortes de 2016 (1, 262 e 1 pessoa) ficam de fora por serem pequenas demais.
 
-Screenshots serão adicionados em seguida.
+![Retenção por Coorte](04_powerbi/img/retencao_coorte.png)
+
+### 3. Categorias e Regiões
+Top 15 categorias com participação na receita e % one-shot; taxa de retenção, ticket e frete por região.
+
+![Categorias e Regiões](04_powerbi/img/categorias_regioes.png)
 
 ---
 
@@ -169,7 +176,7 @@ Screenshots serão adicionados em seguida.
 | Dashboard Power BI: Visão Geral (KPIs da tese) | Pronto |
 | Dashboard Power BI: Retenção por Coorte | Pronto |
 | Dashboard Power BI: Categorias e Regiões | Pronto |
-| Screenshots do dashboard no README | Em construção |
+| Screenshots do dashboard no README | Pronto |
 | Pacotes SSIS | Planejado |
 | Modelo SSAS Tabular | Planejado |
 

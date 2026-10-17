@@ -171,6 +171,8 @@ Manchete com a tese + 4 cartões que a comprovam:
 
 ## Página "Retenção por Coorte"
 
+Manchete: *Menos de 1% dos clientes volta a comprar em qualquer mês após a 1ª compra.*
+
 Matriz: **Linhas** `DimCliente[AnoMes Aquisicao]` · **Colunas** `Meses Relativos[Mes Relativo]` · **Valores** `[% Retenção Coorte]`.
 
 - Filtro no visual: `Mes Relativo >= 1` (o mês 0 é sempre 100% e apagaria a escala de cor).

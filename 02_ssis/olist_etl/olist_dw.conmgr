@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="olist_dw"
+  DTS:DTSID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=localhost;Initial Catalog=olist_financeiro_ssis;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-olist_etl-{9034E3C7-16C5-4754-A381-0AD2305C2A00}localhost.olist_financeiro_ssis;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

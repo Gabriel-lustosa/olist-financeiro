@@ -42,6 +42,8 @@ WITH (
 -- ---------------------------------------------------------------------
 -- TABELA: product_category_translation
 -- Mapa de categoria PT -> EN
+-- Atenção: diferente dos outros CSVs (LF), este arquivo é CRLF. Com
+-- ROWTERMINATOR '0x0a' o '\r' ficava grudado no fim da categoria EN.
 -- ---------------------------------------------------------------------
 CREATE TABLE product_category_translation (
     product_category_name         VARCHAR(100) NOT NULL,
@@ -56,7 +58,7 @@ WITH (
     FORMAT = 'CSV',
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '0x0a',
+    ROWTERMINATOR = '0x0d0a',
     CODEPAGE = '65001',
     TABLOCK
 );

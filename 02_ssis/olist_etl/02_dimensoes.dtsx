@@ -1,0 +1,1080 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/21/2026 7:49:45 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-BR098OM"
+  DTS:CreatorName="DESKTOP-BR098OM\Lustosa"
+  DTS:DTSID="{3DB106FE-9F32-456F-A2CA-14684C30DA64}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1046"
+  DTS:ObjectName="02_dimensoes"
+  DTS:PackageType="5"
+  DTS:VersionBuild="4"
+  DTS:VersionGUID="{6F3B65F3-9298-4477-8345-EACA6AAFBB05}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\DFT DimCliente"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarefa Fluxo de Dados"
+      DTS:DTSID="{8B5E6790-F6D3-45AE-9BBE-CBC29CA47F69}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT DimCliente"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT DimCliente\OLEDB DimCliente"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino OLE DB"
+              name="OLEDB DimCliente"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset">[dbo].[DimCliente]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se os valores fornecidos para colunas de identidade serão copiados no destino. Se false, os valores para colunas de identidade serão gerados automaticamente no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se as colunas que contêm null terão null inserido no destino. Se false, as colunas que contêm null terão seus valores padrão inseridos no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepNulls">true</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica as opções a serem usadas com o carregamento rápido. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica quando confirmações são emitidas durante a inserção de dados. Um valor de 0 especifica que uma confirmação será emitida ao final da inserção de dados. Aplicável somente se o carregamento rápido estiver ativado."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT DimCliente\OLEDB DimCliente.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB]"
+                  errorOrTruncationOperation="Inserir"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de Destino OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].Columns[customer_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="customer_id"
+                      externalMetadataColumnId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_id]"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_id]" />
+                    <inputColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].Columns[customer_unique_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="customer_unique_id"
+                      externalMetadataColumnId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_unique_id]"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_unique_id]" />
+                    <inputColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].Columns[customer_zip_code_prefix]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="customer_zip_code_prefix"
+                      externalMetadataColumnId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_zip_code_prefix]"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_zip_code_prefix]" />
+                    <inputColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].Columns[customer_city]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="customer_city"
+                      externalMetadataColumnId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_city]"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_city]" />
+                    <inputColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].Columns[customer_state]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="customer_state"
+                      externalMetadataColumnId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_state]"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_state]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_cliente]"
+                      dataType="i4"
+                      name="sk_cliente" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="customer_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_unique_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="customer_unique_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="customer_zip_code_prefix" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_city]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="customer_city" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB].ExternalColumns[customer_state]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="customer_state" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT DimCliente\OLEDB DimCliente.Outputs[Saída de Erro de Destino OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Destino OLE DB"
+                  synchronousInputId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimCliente\OLEDB DimCliente.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\OLEDB DimCliente.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimCliente\OLEDB DimCliente.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT DimCliente\SRC customers"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origem OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;7"
+              description="Origem OLE DB"
+              name="SRC customers"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT customer_id, customer_unique_id, customer_zip_code_prefix, customer_city, customer_state
+FROM dbo.customers
+ORDER BY customer_id;</property>
+                <property
+                  dataType="System.String"
+                  description="A variável que contém o comando SQL a ser executado."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Os mapeamentos entre os parâmetros no comando SQL e as variáveis."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT DimCliente\SRC customers.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB]"
+                  name="Saída de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_id]"
+                      length="50"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_id]"
+                      name="customer_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_unique_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_unique_id]"
+                      length="50"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_unique_id]"
+                      name="customer_unique_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_zip_code_prefix]"
+                      length="10"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_zip_code_prefix]"
+                      name="customer_zip_code_prefix"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_city]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_city]"
+                      length="100"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_city]"
+                      name="customer_city"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_state]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_state]"
+                      length="2"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].Columns[customer_state]"
+                      name="customer_state"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="customer_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_unique_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="customer_unique_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="customer_zip_code_prefix" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_city]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="customer_city" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_state]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="customer_state" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB]"
+                  isErrorOut="true"
+                  name="Saída de Erro de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_id]"
+                      name="customer_id" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_unique_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_unique_id]"
+                      name="customer_unique_id" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_zip_code_prefix]"
+                      name="customer_zip_code_prefix" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_city]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_city]"
+                      name="customer_city" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_state]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_state]"
+                      name="customer_state" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT DimCliente.Paths[Saída de Origem OLE DB]"
+              endId="Package\DFT DimCliente\OLEDB DimCliente.Inputs[Entrada de Destino OLE DB]"
+              name="Saída de Origem OLE DB"
+              startId="Package\DFT DimCliente\SRC customers.Outputs[Saída de Origem OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\DFT DimVendedor"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarefa Fluxo de Dados"
+      DTS:DTSID="{2EEF27A8-DCC6-4651-94D4-DEF0C928D824}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT DimVendedor"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT DimVendedor\OLEDB DimVendedor"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino OLE DB"
+              name="OLEDB DimVendedor"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset">[dbo].[DimVendedor]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se os valores fornecidos para colunas de identidade serão copiados no destino. Se false, os valores para colunas de identidade serão gerados automaticamente no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se as colunas que contêm null terão null inserido no destino. Se false, as colunas que contêm null terão seus valores padrão inseridos no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepNulls">true</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica as opções a serem usadas com o carregamento rápido. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica quando confirmações são emitidas durante a inserção de dados. Um valor de 0 especifica que uma confirmação será emitida ao final da inserção de dados. Aplicável somente se o carregamento rápido estiver ativado."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT DimVendedor\OLEDB DimVendedor.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB]"
+                  errorOrTruncationOperation="Inserir"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de Destino OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].Columns[seller_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="seller_id"
+                      externalMetadataColumnId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_id]"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_id]" />
+                    <inputColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].Columns[seller_zip_code_prefix]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="seller_zip_code_prefix"
+                      externalMetadataColumnId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_zip_code_prefix]"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_zip_code_prefix]" />
+                    <inputColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].Columns[seller_city]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="seller_city"
+                      externalMetadataColumnId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_city]"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_city]" />
+                    <inputColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].Columns[seller_state]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="2"
+                      cachedName="seller_state"
+                      externalMetadataColumnId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_state]"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_state]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_vendedor]"
+                      dataType="i4"
+                      name="sk_vendedor" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="seller_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="seller_zip_code_prefix" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_city]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="seller_city" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB].ExternalColumns[seller_state]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="seller_state" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT DimVendedor\OLEDB DimVendedor.Outputs[Saída de Erro de Destino OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Destino OLE DB"
+                  synchronousInputId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimVendedor\OLEDB DimVendedor.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\OLEDB DimVendedor.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimVendedor\OLEDB DimVendedor.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT DimVendedor\SRC sellers"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origem OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;7"
+              description="Origem OLE DB"
+              name="SRC sellers"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT seller_id, seller_zip_code_prefix, seller_city, seller_state
+FROM dbo.sellers
+ORDER BY seller_id;</property>
+                <property
+                  dataType="System.String"
+                  description="A variável que contém o comando SQL a ser executado."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Os mapeamentos entre os parâmetros no comando SQL e as variáveis."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT DimVendedor\SRC sellers.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB]"
+                  name="Saída de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_id]"
+                      length="50"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_id]"
+                      name="seller_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_zip_code_prefix]"
+                      length="10"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_zip_code_prefix]"
+                      name="seller_zip_code_prefix"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_city]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_city]"
+                      length="100"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_city]"
+                      name="seller_city"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_state]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_state]"
+                      length="2"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].Columns[seller_state]"
+                      name="seller_state"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="seller_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="seller_zip_code_prefix" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_city]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="seller_city" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_state]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="seller_state" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB]"
+                  isErrorOut="true"
+                  name="Saída de Erro de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_id]"
+                      name="seller_id" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_zip_code_prefix]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_zip_code_prefix]"
+                      name="seller_zip_code_prefix" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_city]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_city]"
+                      name="seller_city" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_state]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_state]"
+                      name="seller_state" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT DimVendedor.Paths[Saída de Origem OLE DB]"
+              endId="Package\DFT DimVendedor\OLEDB DimVendedor.Inputs[Entrada de Destino OLE DB]"
+              name="Saída de Origem OLE DB"
+              startId="Package\DFT DimVendedor\SRC sellers.Outputs[Saída de Origem OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Limpar dimensões"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tarefa Executar SQL"
+      DTS:DTSID="{3C09B54A-8622-4431-9AD1-1F4711FFF08A}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Limpar dimensões"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9034E3C7-16C5-4754-A381-0AD2305C2A00}"
+          SQLTask:SqlStatementSource="-- A fato aponta (FK) para as dimensões: ela é esvaziada primeiro.&#xA;-- Ela mesma não é referenciada por ninguém, então aceita TRUNCATE.&#xA;TRUNCATE TABLE dbo.FatoVendas;&#xA;&#xA;-- Dimensões referenciadas por FK não aceitam TRUNCATE (nem vazias) -&gt; DELETE&#xA;DELETE FROM dbo.DimCliente;&#xA;DELETE FROM dbo.DimVendedor;&#xA;DELETE FROM dbo.DimProduto;&#xA;DELETE FROM dbo.DimData;&#xA;&#xA;-- DELETE não zera o IDENTITY: volta o contador para a SK recomeçar em 1.&#xA;-- Só em tabela que já teve linha (em tabela nunca usada, RESEED 0 faria a SK começar em 0).&#xA;IF (SELECT last_value FROM sys.identity_columns WHERE object_id = OBJECT_ID('dbo.DimCliente')) IS NOT NULL&#xA;    DBCC CHECKIDENT ('dbo.DimCliente', RESEED, 0);&#xA;IF (SELECT last_value FROM sys.identity_columns WHERE object_id = OBJECT_ID('dbo.DimVendedor')) IS NOT NULL&#xA;    DBCC CHECKIDENT ('dbo.DimVendedor', RESEED, 0);&#xA;IF (SELECT last_value FROM sys.identity_columns WHERE object_id = OBJECT_ID('dbo.DimProduto')) IS NOT NULL&#xA;    DBCC CHECKIDENT ('dbo.DimProduto', RESEED, 0);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restrição]"
+      DTS:CreationName=""
+      DTS:DTSID="{97F8DF5D-4FE9-4D7C-98DC-CBCE1E31A58B}"
+      DTS:From="Package\Limpar dimensões"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restrição"
+      DTS:To="Package\DFT DimCliente" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restrição 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{7A845AC4-31C4-4AFE-B28A-711A68B1263B}"
+      DTS:From="Package\Limpar dimensões"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restrição 1"
+      DTS:To="Package\DFT DimVendedor" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--Esta seção CDATA contém as informações de layout do pacote. A seção inclui informações como coordenadas (x,y), largura e altura.-->
+<!--Se você editar manualmente esta seção e cometer algum erro, poderá excluí-la. -->
+<!--O pacote ainda poderá ser carregado normalmente, mas as informações de layout anteriores serão perdidas e o designer reorganizará automaticamente os elementos na superfície de design.-->
+<Objects
+  Version="8">
+  <!--Cada nó abaixo conterá propriedades que não afetam o comportamento em tempo de execução.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="164,42"
+          Id="Package\Limpar dimensões"
+          TopLeft="287,60" />
+        <NodeLayout
+          Size="152,42"
+          Id="Package\DFT DimCliente"
+          TopLeft="156,203" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restrição]"
+          TopLeft="369,102">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-137,101"
+              Start="0,0"
+              End="-137,93.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,46.5"
+                    Point2="0,50.5"
+                    Point3="-4,50.5" />
+                  <mssgle:LineSegment
+                    End="-133,50.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-133,50.5"
+                    Point2="-137,50.5"
+                    Point3="-137,54.5" />
+                  <mssgle:LineSegment
+                    End="-137,93.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="165,42"
+          Id="Package\DFT DimVendedor"
+          TopLeft="429,208" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restrição 1]"
+          TopLeft="395,102">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="116.5,106"
+              Start="0,0"
+              End="116.5,98.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.0144927536232" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,46.0144927536232"
+                    Point2="0,50.0144927536232"
+                    Point3="4,50.0144927536232" />
+                  <mssgle:LineSegment
+                    End="112.5,50.0144927536232" />
+                  <mssgle:CubicBezierSegment
+                    Point1="112.5,50.0144927536232"
+                    Point2="116.5,50.0144927536232"
+                    Point3="116.5,54.0144927536232" />
+                  <mssgle:LineSegment
+                    End="116.5,98.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\DFT DimCliente">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="149,42"
+          Id="Package\DFT DimCliente\SRC customers"
+          TopLeft="277,68" />
+        <NodeLayout
+          Size="165,42"
+          Id="Package\DFT DimCliente\OLEDB DimCliente"
+          TopLeft="277,150" />
+        <EdgeLayout
+          Id="Package\DFT DimCliente.Paths[Saída de Origem OLE DB]"
+          TopLeft="351.5,110">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="8,40"
+              Start="0,0"
+              End="8,32.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16"
+                    Point2="0,20"
+                    Point3="4,20" />
+                  <mssgle:LineSegment
+                    End="4,20" />
+                  <mssgle:CubicBezierSegment
+                    Point1="4,20"
+                    Point2="8,20"
+                    Point3="8,24" />
+                  <mssgle:LineSegment
+                    End="8,32.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT DimCliente\SRC customers">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT DimCliente\OLEDB DimCliente">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\DFT DimVendedor">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="131,42"
+          Id="Package\DFT DimVendedor\SRC sellers"
+          TopLeft="322,86" />
+        <NodeLayout
+          Size="178,42"
+          Id="Package\DFT DimVendedor\OLEDB DimVendedor"
+          TopLeft="319,168" />
+        <EdgeLayout
+          Id="Package\DFT DimVendedor.Paths[Saída de Origem OLE DB]"
+          TopLeft="387.5,128">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="20.5,40"
+              Start="0,0"
+              End="20.5,32.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16"
+                    Point2="0,20"
+                    Point3="4,20" />
+                  <mssgle:LineSegment
+                    End="16.5,20" />
+                  <mssgle:CubicBezierSegment
+                    Point1="16.5,20"
+                    Point2="20.5,20"
+                    Point3="20.5,24" />
+                  <mssgle:LineSegment
+                    End="20.5,32.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT DimVendedor\SRC sellers">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT DimVendedor\OLEDB DimVendedor">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

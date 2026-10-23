@@ -11,12 +11,29 @@
   DTS:LocaleID="1046"
   DTS:ObjectName="02_dimensoes"
   DTS:PackageType="5"
-  DTS:VersionBuild="4"
-  DTS:VersionGUID="{6F3B65F3-9298-4477-8345-EACA6AAFBB05}">
+  DTS:VersionBuild="6"
+  DTS:VersionGUID="{285E51D5-AA31-4593-B732-47AD0F180BE3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
   <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Carregar DimData"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tarefa Executar SQL"
+      DTS:DTSID="{89BA48E6-C5BF-4908-8305-F104DA342687}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Carregar DimData"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9034E3C7-16C5-4754-A381-0AD2305C2A00}"
+          SQLTask:SqlStatementSource="-- Calendário 2016-01-01 a 2018-12-31 (mesmo script do 01_sql/04).&#xA;-- Nomes de mês e dia da semana em português&#xA;SET LANGUAGE 'Brazilian';&#xA;&#xA;WITH calendario AS (&#xA;    SELECT CAST('2016-01-01' AS DATE) AS data_completa&#xA;    UNION ALL&#xA;    SELECT DATEADD(DAY, 1, data_completa)&#xA;    FROM calendario&#xA;    WHERE data_completa &lt; '2018-12-31'&#xA;)&#xA;INSERT INTO dbo.DimData (&#xA;    sk_data, data_completa, ano, trimestre, mes_numero, mes_nome,&#xA;    dia, dia_semana_num, dia_semana_nome, eh_fim_semana&#xA;)&#xA;SELECT&#xA;    CAST(CONVERT(VARCHAR(8), data_completa, 112) AS INT),   -- YYYYMMDD&#xA;    data_completa,&#xA;    YEAR(data_completa),&#xA;    DATEPART(QUARTER, data_completa),&#xA;    MONTH(data_completa),&#xA;    DATENAME(MONTH, data_completa),&#xA;    DAY(data_completa),&#xA;    DATEPART(WEEKDAY, data_completa),&#xA;    DATENAME(WEEKDAY, data_completa),&#xA;    CASE WHEN DATEPART(WEEKDAY, data_completa) IN (1, 7) THEN 1 ELSE 0 END&#xA;FROM calendario&#xA;OPTION (MAXRECURSION 0);" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\DFT DimCliente"
       DTS:CreationName="Microsoft.Pipeline"
@@ -430,6 +447,600 @@ ORDER BY customer_id;</property>
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
+      DTS:refId="Package\DFT DimProduto"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarefa Fluxo de Dados"
+      DTS:DTSID="{BEB042FB-EED1-463E-8FE0-7585D5CB5DF5}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DFT DimProduto"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\DFT DimProduto\LKP tradução"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Pesquisa;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;6"
+              description="Une colunas adicionais aos fluxos de dados pesquisando valores de uma tabela. Por exemplo, una à coluna 'employee id' a tabela de funcionários para obter 'hire date' e 'employee name'. Essa transformação é recomendada quando a tabela de pesquisa está de acordo com a memória."
+              name="LKP tradução"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Especifica a instrução SQL que gera a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT product_category_name, product_category_name_english
+FROM dbo.product_category_translation;</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica uma instrução SQL que usa parâmetros para gerar a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT product_category_name, product_category_name_english
+FROM dbo.product_category_translation;) [refTable]
+where [refTable].[product_category_name] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de conexão usado para acessar o conjunto de dados de referência."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de cache da tabela de pesquisa."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 32 bits."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 64 bits."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indica se os metadados de referência em um formato XML devem ser referenciados."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="product_category_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="product_category_name_english" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Especifica a lista de identificadores de linhagem mapeados para os parâmetros usados pela instrução SQL na propriedade SQLCommand. As entradas na lista são separadas por ponto e vírgulas."
+                  name="ParameterMap">#{Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_category_name]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determina se as chaves duplicadas nos dados de referência devem ser tratadas como erros quando o modo de cache cheio é usado."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT DimProduto\LKP tradução.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="O gerenciador de conexões usado para acessar dados de pesquisa."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT DimProduto\LKP tradução.Inputs[Entrada de Pesquisa]"
+                  name="Entrada de Pesquisa">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT DimProduto\LKP tradução.Inputs[Entrada de Pesquisa].Columns[product_category_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="product_category_name"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_category_name]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência que uma coluna une."
+                          name="JoinToReferenceColumn">product_category_name</property>
+                        <property
+                          dataType="System.Null"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Correspondência de Pesquisa]"
+                  errorOrTruncationOperation="Pesquisa"
+                  errorRowDisposition="IgnoreFailure"
+                  exclusionGroup="1"
+                  name="Saída de Correspondência de Pesquisa"
+                  synchronousInputId="Package\DFT DimProduto\LKP tradução.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Correspondência de Pesquisa].Columns[product_category_name_english]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Copiar Coluna"
+                      length="100"
+                      lineageId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Correspondência de Pesquisa].Columns[product_category_name_english]"
+                      name="product_category_name_english"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn">product_category_name_english</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT DimProduto\LKP tradução.Outputs[Saída Sem Correspondência de Pesquisa]"
+                  description="A saída de Pesquisa que trata as linhas sem entradas correspondentes no conjunto de dados de referência. Use essa saída quando a propriedade NoMatchBehavior estiver definida como &quot;Enviar as linhas sem entradas correspondentes para a saída sem correspondência&quot;."
+                  exclusionGroup="1"
+                  name="Saída Sem Correspondência de Pesquisa"
+                  synchronousInputId="Package\DFT DimProduto\LKP tradução.Inputs[Entrada de Pesquisa]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Erro de Pesquisa]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Pesquisa"
+                  synchronousInputId="Package\DFT DimProduto\LKP tradução.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT DimProduto\OLEDB DimProduto"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino OLE DB"
+              name="OLEDB DimProduto"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset">[dbo].[DimProduto]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se os valores fornecidos para colunas de identidade serão copiados no destino. Se false, os valores para colunas de identidade serão gerados automaticamente no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se as colunas que contêm null terão null inserido no destino. Se false, as colunas que contêm null terão seus valores padrão inseridos no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepNulls">true</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica as opções a serem usadas com o carregamento rápido. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica quando confirmações são emitidas durante a inserção de dados. Um valor de 0 especifica que uma confirmação será emitida ao final da inserção de dados. Aplicável somente se o carregamento rápido estiver ativado."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT DimProduto\OLEDB DimProduto.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB]"
+                  errorOrTruncationOperation="Inserir"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de Destino OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].Columns[product_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="product_id"
+                      externalMetadataColumnId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_id]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_id]" />
+                    <inputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].Columns[product_category_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="product_category_name"
+                      externalMetadataColumnId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_category_name]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_category_name]" />
+                    <inputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].Columns[product_weight_g]"
+                      cachedDataType="i4"
+                      cachedName="product_weight_g"
+                      externalMetadataColumnId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_weight_g]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_weight_g]" />
+                    <inputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].Columns[product_length_cm]"
+                      cachedDataType="i4"
+                      cachedName="product_length_cm"
+                      externalMetadataColumnId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_length_cm]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_length_cm]" />
+                    <inputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].Columns[product_height_cm]"
+                      cachedDataType="i4"
+                      cachedName="product_height_cm"
+                      externalMetadataColumnId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_height_cm]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_height_cm]" />
+                    <inputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].Columns[product_width_cm]"
+                      cachedDataType="i4"
+                      cachedName="product_width_cm"
+                      externalMetadataColumnId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_width_cm]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_width_cm]" />
+                    <inputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].Columns[product_category_name_english]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="product_category_name_english"
+                      externalMetadataColumnId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_category_name_english]"
+                      lineageId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Correspondência de Pesquisa].Columns[product_category_name_english]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_produto]"
+                      dataType="i4"
+                      name="sk_produto" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="product_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_category_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="product_category_name" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_category_name_english]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="product_category_name_english" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_weight_g]"
+                      dataType="i4"
+                      name="product_weight_g" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_length_cm]"
+                      dataType="i4"
+                      name="product_length_cm" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_height_cm]"
+                      dataType="i4"
+                      name="product_height_cm" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB].ExternalColumns[product_width_cm]"
+                      dataType="i4"
+                      name="product_width_cm" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT DimProduto\OLEDB DimProduto.Outputs[Saída de Erro de Destino OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Destino OLE DB"
+                  synchronousInputId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\OLEDB DimProduto.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\OLEDB DimProduto.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\OLEDB DimProduto.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT DimProduto\SRC products"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origem OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;7"
+              description="Origem OLE DB"
+              name="SRC products"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT product_id, product_category_name, product_weight_g,
+       product_length_cm, product_height_cm, product_width_cm
+FROM dbo.products
+ORDER BY product_id;</property>
+                <property
+                  dataType="System.String"
+                  description="A variável que contém o comando SQL a ser executado."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Os mapeamentos entre os parâmetros no comando SQL e as variáveis."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT DimProduto\SRC products.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB]"
+                  name="Saída de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_id]"
+                      length="50"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_id]"
+                      name="product_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_category_name]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_category_name]"
+                      length="100"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_category_name]"
+                      name="product_category_name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_weight_g]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_weight_g]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_weight_g]"
+                      name="product_weight_g"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_length_cm]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_length_cm]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_length_cm]"
+                      name="product_length_cm"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_height_cm]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_height_cm]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_height_cm]"
+                      name="product_height_cm"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_width_cm]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_width_cm]"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].Columns[product_width_cm]"
+                      name="product_width_cm"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="product_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_category_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="product_category_name" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_weight_g]"
+                      dataType="i4"
+                      name="product_weight_g" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_length_cm]"
+                      dataType="i4"
+                      name="product_length_cm" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_height_cm]"
+                      dataType="i4"
+                      name="product_height_cm" />
+                    <externalMetadataColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB].ExternalColumns[product_width_cm]"
+                      dataType="i4"
+                      name="product_width_cm" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB]"
+                  isErrorOut="true"
+                  name="Saída de Erro de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_id]"
+                      name="product_id" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_category_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_category_name]"
+                      name="product_category_name" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_weight_g]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_weight_g]"
+                      name="product_weight_g" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_length_cm]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_length_cm]"
+                      name="product_length_cm" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_height_cm]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_height_cm]"
+                      name="product_height_cm" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_width_cm]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[product_width_cm]"
+                      name="product_width_cm" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT DimProduto\SRC products.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\DFT DimProduto.Paths[Saída de Correspondência de Pesquisa]"
+              endId="Package\DFT DimProduto\OLEDB DimProduto.Inputs[Entrada de Destino OLE DB]"
+              name="Saída de Correspondência de Pesquisa"
+              startId="Package\DFT DimProduto\LKP tradução.Outputs[Saída de Correspondência de Pesquisa]" />
+            <path
+              refId="Package\DFT DimProduto.Paths[Saída de Origem OLE DB]"
+              endId="Package\DFT DimProduto\LKP tradução.Inputs[Entrada de Pesquisa]"
+              name="Saída de Origem OLE DB"
+              startId="Package\DFT DimProduto\SRC products.Outputs[Saída de Origem OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
       DTS:refId="Package\DFT DimVendedor"
       DTS:CreationName="Microsoft.Pipeline"
       DTS:Description="Tarefa Fluxo de Dados"
@@ -838,6 +1449,22 @@ ORDER BY seller_id;</property>
       DTS:LogicalAnd="True"
       DTS:ObjectName="Restrição 1"
       DTS:To="Package\DFT DimVendedor" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restrição 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{DF8792EC-5C0D-4155-8D34-C36CFA8650D3}"
+      DTS:From="Package\Limpar dimensões"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restrição 2"
+      DTS:To="Package\DFT DimProduto" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restrição 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{3091B640-EA99-4AE1-A41B-16FBAE1F70E1}"
+      DTS:From="Package\Limpar dimensões"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restrição 3"
+      DTS:To="Package\Carregar DimData" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--Esta seção CDATA contém as informações de layout do pacote. A seção inclui informações como coordenadas (x,y), largura e altura.-->
@@ -850,18 +1477,18 @@ ORDER BY seller_id;</property>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="164,42"
           Id="Package\Limpar dimensões"
-          TopLeft="287,60" />
+          TopLeft="287,68" />
         <NodeLayout
           Size="152,42"
           Id="Package\DFT DimCliente"
-          TopLeft="156,203" />
+          TopLeft="156,211" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Restrição]"
-          TopLeft="369,102">
+          TopLeft="369,110">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -896,10 +1523,10 @@ ORDER BY seller_id;</property>
         <NodeLayout
           Size="165,42"
           Id="Package\DFT DimVendedor"
-          TopLeft="429,208" />
+          TopLeft="429,216" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Restrição 1]"
-          TopLeft="395,102">
+          TopLeft="395,110">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -923,6 +1550,82 @@ ORDER BY seller_id;</property>
                     Point3="116.5,54.0144927536232" />
                   <mssgle:LineSegment
                     End="116.5,98.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="157,42"
+          Id="Package\DFT DimProduto"
+          TopLeft="676,152" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restrição 2]"
+          TopLeft="443,110">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="311.5,42"
+              Start="0,0"
+              End="311.5,34.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10.448" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10.448"
+                    Point2="0,14.448"
+                    Point3="4,14.448" />
+                  <mssgle:LineSegment
+                    End="307.5,14.448" />
+                  <mssgle:CubicBezierSegment
+                    Point1="307.5,14.448"
+                    Point2="311.5,14.448"
+                    Point3="311.5,18.448" />
+                  <mssgle:LineSegment
+                    End="311.5,34.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="164,42"
+          Id="Package\Carregar DimData"
+          TopLeft="539,29" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restrição 3]"
+          TopLeft="451,89">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="88,-39"
+              Start="0,0"
+              End="80.5,-39">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="40,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="40,0"
+                    Point2="44,0"
+                    Point3="44,-4" />
+                  <mssgle:LineSegment
+                    End="44,-35" />
+                  <mssgle:CubicBezierSegment
+                    Point1="44,-35"
+                    Point2="44,-39"
+                    Point3="48,-39" />
+                  <mssgle:LineSegment
+                    End="80.5,-39" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1065,6 +1768,140 @@ ORDER BY seller_id;</property>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\DFT DimVendedor\OLEDB DimVendedor">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\DFT DimProduto">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="142,42"
+          Id="Package\DFT DimProduto\SRC products"
+          TopLeft="357,92" />
+        <NodeLayout
+          Size="141,42"
+          Id="Package\DFT DimProduto\LKP tradução"
+          TopLeft="371,184" />
+        <EdgeLayout
+          Id="Package\DFT DimProduto.Paths[Saída de Origem OLE DB]"
+          TopLeft="428,134">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="13.5,50"
+              Start="0,0"
+              End="13.5,42.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,21" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,21"
+                    Point2="0,25"
+                    Point3="4,25" />
+                  <mssgle:LineSegment
+                    End="9.5,25" />
+                  <mssgle:CubicBezierSegment
+                    Point1="9.5,25"
+                    Point2="13.5,25"
+                    Point3="13.5,29" />
+                  <mssgle:LineSegment
+                    End="13.5,42.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="170,42"
+          Id="Package\DFT DimProduto\OLEDB DimProduto"
+          TopLeft="600,151" />
+        <EdgeLayout
+          Id="Package\DFT DimProduto.Paths[Saída de Correspondência de Pesquisa]"
+          TopLeft="512,205">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="88,-33"
+              Start="0,0"
+              End="80.5,-33">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="40,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="40,0"
+                    Point2="44,0"
+                    Point3="44,-4" />
+                  <mssgle:LineSegment
+                    End="44,-29" />
+                  <mssgle:CubicBezierSegment
+                    Point1="44,-29"
+                    Point2="44,-33"
+                    Point3="48,-33" />
+                  <mssgle:LineSegment
+                    End="80.5,-33" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-41.3740234375,1,170.748046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT DimProduto\SRC products">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT DimProduto\LKP tradução">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\DFT DimProduto\OLEDB DimProduto">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>

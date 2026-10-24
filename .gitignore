@@ -29,6 +29,10 @@ obj/
 *.ispac.tmp
 .vs/
 
+# === Claude Code (preferências pessoais, ficam só na máquina) ===
+CLAUDE.local.md
+.claude/settings.local.json
+
 # === Editor / Sistema ===
 .vscode/
 .idea/

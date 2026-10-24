@@ -1,0 +1,1716 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/24/2026 7:51:29 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-BR098OM"
+  DTS:CreatorName="DESKTOP-BR098OM\Lustosa"
+  DTS:DTSID="{2797362C-70C5-4975-8079-BE85180E584F}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1046"
+  DTS:ObjectName="03_fato"
+  DTS:PackageType="5"
+  DTS:VersionBuild="12"
+  DTS:VersionGUID="{24AD5F19-19B5-409B-BB29-9DB07FADBAAE}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Carregar FatoVendas"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Tarefa Fluxo de Dados"
+      DTS:DTSID="{9F5F171A-49DE-415F-9BEF-FE8AF71026EA}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Carregar FatoVendas"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Carregar FatoVendas\FatoVendas"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino OLE DB"
+              name="FatoVendas"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset">[dbo].[FatoVendas]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se os valores fornecidos para colunas de identidade serão copiados no destino. Se false, os valores para colunas de identidade serão gerados automaticamente no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica se as colunas que contêm null terão null inserido no destino. Se false, as colunas que contêm null terão seus valores padrão inseridos no destino. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica as opções a serem usadas com o carregamento rápido. Aplicável apenas se o carregamento rápido estiver ativado."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica quando confirmações são emitidas durante a inserção de dados. Um valor de 0 especifica que uma confirmação será emitida ao final da inserção de dados. Aplicável somente se o carregamento rápido estiver ativado."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Carregar FatoVendas\FatoVendas.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB]"
+                  errorOrTruncationOperation="Inserir"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Entrada de Destino OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[order_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="order_id"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[order_id]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_id]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[order_item_id]"
+                      cachedDataType="i4"
+                      cachedName="order_item_id"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[order_item_id]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_item_id]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[price]"
+                      cachedDataType="numeric"
+                      cachedName="price"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[price]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[price]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[freight_value]"
+                      cachedDataType="numeric"
+                      cachedName="freight_value"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[freight_value]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[freight_value]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[order_status]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="order_status"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[order_status]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_status]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[sk_data]"
+                      cachedDataType="i4"
+                      cachedName="sk_data"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_data]"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[sk_cliente]"
+                      cachedDataType="i4"
+                      cachedName="sk_cliente"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_cliente]"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_cliente]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[sk_produto]"
+                      cachedDataType="i4"
+                      cachedName="sk_produto"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_produto]"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_produto]" />
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].Columns[sk_vendedor]"
+                      cachedDataType="i4"
+                      cachedName="sk_vendedor"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_vendedor]"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_vendedor]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_data]"
+                      dataType="i4"
+                      name="sk_data" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_cliente]"
+                      dataType="i4"
+                      name="sk_cliente" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_produto]"
+                      dataType="i4"
+                      name="sk_produto" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[sk_vendedor]"
+                      dataType="i4"
+                      name="sk_vendedor" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[order_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="order_id" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[order_item_id]"
+                      dataType="i4"
+                      name="order_item_id" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[order_status]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="order_status" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[price]"
+                      dataType="numeric"
+                      name="price"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[freight_value]"
+                      dataType="numeric"
+                      name="freight_value"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB].ExternalColumns[valor_total]"
+                      dataType="numeric"
+                      name="valor_total"
+                      precision="11"
+                      scale="2" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\FatoVendas.Outputs[Saída de Erro de Destino OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Destino OLE DB"
+                  synchronousInputId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\FatoVendas.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\FatoVendas.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\FatoVendas.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Carregar FatoVendas\order_items + orders"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origem OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;7"
+              description="Origem OLE DB"
+              name="order_items + orders"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="O tempo em segundos antes que um comando expire. Zero indica uma expiração infinita."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que contém o nome do objeto de banco de dados usado para abrir um conjunto de linhas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="O comando SQL a ser executado."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT oi.order_id,
+       oi.order_item_id,
+       oi.product_id,
+       oi.seller_id,
+       oi.price,
+       oi.freight_value,
+       o.customer_id,
+       o.order_status,
+       o.order_purchase_timestamp
+FROM order_items AS oi
+INNER JOIN orders AS o ON o.order_id = oi.order_id</property>
+                <property
+                  dataType="System.String"
+                  description="A variável que contém o comando SQL a ser executado."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forca o uso do valor da propriedade DefaultCodePage durante a descrição dos dados de caractere."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o modo usado para acessar o banco de dados."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Os mapeamentos entre os parâmetros no comando SQL e as variáveis."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Carregar FatoVendas\order_items + orders.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="A conexão de tempo de execução OLE DB usada para acessar o banco de dados."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB]"
+                  name="Saída de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_id]"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_id]"
+                      name="order_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_item_id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_item_id]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_item_id]"
+                      name="order_item_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[product_id]"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]"
+                      name="product_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_id]"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]"
+                      name="seller_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[price]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[price]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[price]"
+                      name="price"
+                      precision="10"
+                      scale="2"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[freight_value]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[freight_value]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[freight_value]"
+                      name="freight_value"
+                      precision="10"
+                      scale="2"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_id]"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]"
+                      name="customer_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_status]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_status]"
+                      length="20"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_status]"
+                      name="order_status"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Conversão"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_purchase_timestamp]"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]"
+                      name="order_purchase_timestamp"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="order_id" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_item_id]"
+                      dataType="i4"
+                      name="order_item_id" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="product_id" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="seller_id" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[price]"
+                      dataType="numeric"
+                      name="price"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[freight_value]"
+                      dataType="numeric"
+                      name="freight_value"
+                      precision="10"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="customer_id" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_status]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="order_status" />
+                    <externalMetadataColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].ExternalColumns[order_purchase_timestamp]"
+                      dataType="dbTimeStamp2"
+                      name="order_purchase_timestamp"
+                      scale="7" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB]"
+                  isErrorOut="true"
+                  name="Saída de Erro de Origem OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_id]"
+                      name="order_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_item_id]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_item_id]"
+                      name="order_item_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[product_id]"
+                      name="product_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[seller_id]"
+                      name="seller_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[price]"
+                      dataType="numeric"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[price]"
+                      name="price"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[freight_value]"
+                      dataType="numeric"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[freight_value]"
+                      name="freight_value"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[customer_id]"
+                      name="customer_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_status]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_status]"
+                      name="order_status" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_purchase_timestamp]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[order_purchase_timestamp]"
+                      name="order_purchase_timestamp"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Erro de Origem OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Carregar FatoVendas\Pesquisa DimCliente"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Pesquisa;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;6"
+              description="Une colunas adicionais aos fluxos de dados pesquisando valores de uma tabela. Por exemplo, una à coluna 'employee id' a tabela de funcionários para obter 'hire date' e 'employee name'. Essa transformação é recomendada quando a tabela de pesquisa está de acordo com a memória."
+              name="Pesquisa DimCliente"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Especifica a instrução SQL que gera a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT sk_cliente, customer_id FROM DimCliente</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica uma instrução SQL que usa parâmetros para gerar a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT sk_cliente, customer_id FROM DimCliente) [refTable]
+where [refTable].[customer_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de conexão usado para acessar o conjunto de dados de referência."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de cache da tabela de pesquisa."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 32 bits."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 64 bits."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indica se os metadados de referência em um formato XML devem ser referenciados."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="sk_cliente" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="customer_id" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Especifica a lista de identificadores de linhagem mapeados para os parâmetros usados pela instrução SQL na propriedade SQLCommand. As entradas na lista são separadas por ponto e vírgulas."
+                  name="ParameterMap">#{Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determina se as chaves duplicadas nos dados de referência devem ser tratadas como erros quando o modo de cache cheio é usado."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="O gerenciador de conexões usado para acessar dados de pesquisa."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Inputs[Entrada de Pesquisa]"
+                  name="Entrada de Pesquisa">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Inputs[Entrada de Pesquisa].Columns[customer_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="customer_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência que uma coluna une."
+                          name="JoinToReferenceColumn">customer_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Correspondência de Pesquisa]"
+                  errorOrTruncationOperation="Pesquisa"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="Saída de Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimCliente.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_cliente]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copiar Coluna"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_cliente]"
+                      name="sk_cliente"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn">sk_cliente</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída Sem Correspondência de Pesquisa]"
+                  description="A saída de Pesquisa que trata as linhas sem entradas correspondentes no conjunto de dados de referência. Use essa saída quando a propriedade NoMatchBehavior estiver definida como &quot;Enviar as linhas sem entradas correspondentes para a saída sem correspondência&quot;."
+                  exclusionGroup="1"
+                  name="Saída Sem Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimCliente.Inputs[Entrada de Pesquisa]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Erro de Pesquisa]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimCliente.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Carregar FatoVendas\Pesquisa DimData"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Pesquisa;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;6"
+              description="Une colunas adicionais aos fluxos de dados pesquisando valores de uma tabela. Por exemplo, una à coluna 'employee id' a tabela de funcionários para obter 'hire date' e 'employee name'. Essa transformação é recomendada quando a tabela de pesquisa está de acordo com a memória."
+              name="Pesquisa DimData"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Especifica a instrução SQL que gera a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT sk_data FROM DimData</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica uma instrução SQL que usa parâmetros para gerar a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT sk_data FROM DimData) [refTable]
+where [refTable].[sk_data] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de conexão usado para acessar o conjunto de dados de referência."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de cache da tabela de pesquisa."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 32 bits."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 64 bits."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indica se os metadados de referência em um formato XML devem ser referenciados."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="sk_data" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Especifica a lista de identificadores de linhagem mapeados para os parâmetros usados pela instrução SQL na propriedade SQLCommand. As entradas na lista são separadas por ponto e vírgulas."
+                  name="ParameterMap">#{Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determina se as chaves duplicadas nos dados de referência devem ser tratadas como erros quando o modo de cache cheio é usado."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Carregar FatoVendas\Pesquisa DimData.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="O gerenciador de conexões usado para acessar dados de pesquisa."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\Pesquisa DimData.Inputs[Entrada de Pesquisa]"
+                  name="Entrada de Pesquisa">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimData.Inputs[Entrada de Pesquisa].Columns[sk_data]"
+                      cachedDataType="i4"
+                      cachedName="sk_data"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência que uma coluna une."
+                          name="JoinToReferenceColumn">sk_data</property>
+                        <property
+                          dataType="System.Null"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Correspondência de Pesquisa]"
+                  errorOrTruncationOperation="Pesquisa"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="Saída de Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimData.Inputs[Entrada de Pesquisa]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída Sem Correspondência de Pesquisa]"
+                  description="A saída de Pesquisa que trata as linhas sem entradas correspondentes no conjunto de dados de referência. Use essa saída quando a propriedade NoMatchBehavior estiver definida como &quot;Enviar as linhas sem entradas correspondentes para a saída sem correspondência&quot;."
+                  exclusionGroup="1"
+                  name="Saída Sem Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimData.Inputs[Entrada de Pesquisa]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Erro de Pesquisa]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimData.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Carregar FatoVendas\Pesquisa DimProduto"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Pesquisa;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;6"
+              description="Une colunas adicionais aos fluxos de dados pesquisando valores de uma tabela. Por exemplo, una à coluna 'employee id' a tabela de funcionários para obter 'hire date' e 'employee name'. Essa transformação é recomendada quando a tabela de pesquisa está de acordo com a memória."
+              name="Pesquisa DimProduto"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Especifica a instrução SQL que gera a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT sk_produto, product_id FROM DimProduto</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica uma instrução SQL que usa parâmetros para gerar a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT sk_produto, product_id FROM DimProduto) [refTable]
+where [refTable].[product_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de conexão usado para acessar o conjunto de dados de referência."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de cache da tabela de pesquisa."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 32 bits."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 64 bits."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indica se os metadados de referência em um formato XML devem ser referenciados."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="sk_produto" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="product_id" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Especifica a lista de identificadores de linhagem mapeados para os parâmetros usados pela instrução SQL na propriedade SQLCommand. As entradas na lista são separadas por ponto e vírgulas."
+                  name="ParameterMap">#{Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determina se as chaves duplicadas nos dados de referência devem ser tratadas como erros quando o modo de cache cheio é usado."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="O gerenciador de conexões usado para acessar dados de pesquisa."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Inputs[Entrada de Pesquisa]"
+                  name="Entrada de Pesquisa">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Inputs[Entrada de Pesquisa].Columns[product_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="product_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência que uma coluna une."
+                          name="JoinToReferenceColumn">product_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Correspondência de Pesquisa]"
+                  errorOrTruncationOperation="Pesquisa"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="Saída de Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimProduto.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_produto]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copiar Coluna"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_produto]"
+                      name="sk_produto"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn">sk_produto</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída Sem Correspondência de Pesquisa]"
+                  description="A saída de Pesquisa que trata as linhas sem entradas correspondentes no conjunto de dados de referência. Use essa saída quando a propriedade NoMatchBehavior estiver definida como &quot;Enviar as linhas sem entradas correspondentes para a saída sem correspondência&quot;."
+                  exclusionGroup="1"
+                  name="Saída Sem Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimProduto.Inputs[Entrada de Pesquisa]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Erro de Pesquisa]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimProduto.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Carregar FatoVendas\Pesquisa DimVendedor"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Pesquisa;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;6"
+              description="Une colunas adicionais aos fluxos de dados pesquisando valores de uma tabela. Por exemplo, una à coluna 'employee id' a tabela de funcionários para obter 'hire date' e 'employee name'. Essa transformação é recomendada quando a tabela de pesquisa está de acordo com a memória."
+              name="Pesquisa DimVendedor"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Especifica a instrução SQL que gera a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT sk_vendedor, seller_id FROM DimVendedor</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica uma instrução SQL que usa parâmetros para gerar a tabela de pesquisa."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT sk_vendedor, seller_id FROM DimVendedor) [refTable]
+where [refTable].[seller_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de conexão usado para acessar o conjunto de dados de referência."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica o tipo de cache da tabela de pesquisa."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 32 bits."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Uso Máximo de Memória para o Cache de Referência em uma plataforma de 64 bits."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indica se os metadados de referência em um formato XML devem ser referenciados."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="sk_vendedor" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="seller_id" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Especifica a lista de identificadores de linhagem mapeados para os parâmetros usados pela instrução SQL na propriedade SQLCommand. As entradas na lista são separadas por ponto e vírgulas."
+                  name="ParameterMap">#{Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica a página de código de coluna a ser usada quando não há informações de página de código disponíveis a partir da fonte de dados."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determina se as chaves duplicadas nos dados de referência devem ser tratadas como erros quando o modo de cache cheio é usado."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Connections[OleDbConnection]"
+                  connectionManagerID="{9034E3C7-16C5-4754-A381-0AD2305C2A00}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[olist_dw]"
+                  description="O gerenciador de conexões usado para acessar dados de pesquisa."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Inputs[Entrada de Pesquisa]"
+                  name="Entrada de Pesquisa">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Inputs[Entrada de Pesquisa].Columns[seller_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="seller_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência que uma coluna une."
+                          name="JoinToReferenceColumn">seller_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Correspondência de Pesquisa]"
+                  errorOrTruncationOperation="Pesquisa"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="Saída de Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_vendedor]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copiar Coluna"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Correspondência de Pesquisa].Columns[sk_vendedor]"
+                      name="sk_vendedor"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica a coluna na tabela de referência a partir da qual uma coluna é copiada."
+                          name="CopyFromReferenceColumn">sk_vendedor</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída Sem Correspondência de Pesquisa]"
+                  description="A saída de Pesquisa que trata as linhas sem entradas correspondentes no conjunto de dados de referência. Use essa saída quando a propriedade NoMatchBehavior estiver definida como &quot;Enviar as linhas sem entradas correspondentes para a saída sem correspondência&quot;."
+                  exclusionGroup="1"
+                  name="Saída Sem Correspondência de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Inputs[Entrada de Pesquisa]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Erro de Pesquisa]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Pesquisa"
+                  synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Inputs[Entrada de Pesquisa]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Erro de Pesquisa].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Erro de Pesquisa].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Carregar FatoVendas\sk_data"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Coluna Derivada;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;0"
+              description="Cria novos valores de coluna aplicando expressões a colunas de entrada da transformação. Crie novas colunas ou substitua as existentes. Por exemplo, concatene os valores das colunas 'first name' e 'last name' para formar uma coluna 'full name'."
+              name="sk_data"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\sk_data.Inputs[Entrada de Coluna Derivada]"
+                  description="Entrada para a Transformação Coluna Derivada"
+                  name="Entrada de Coluna Derivada">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\sk_data.Inputs[Entrada de Coluna Derivada].Columns[order_purchase_timestamp]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="order_purchase_timestamp"
+                      cachedScale="7"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada]"
+                  description="Saída Padrão da Transformação Coluna Derivada"
+                  exclusionGroup="1"
+                  name="Saída de Coluna Derivada"
+                  synchronousInputId="Package\Carregar FatoVendas\sk_data.Inputs[Entrada de Coluna Derivada]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Computação"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]"
+                      name="sk_data"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Expressão de Coluna Derivada"
+                          name="Expression">(DT_I4)([YEAR](#{Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]}) * 10000 + [MONTH](#{Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]}) * 100 + [DAY](#{Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]}))</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Expressão Amigável de Coluna Derivada"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_I4)(YEAR(order_purchase_timestamp) * 10000 + MONTH(order_purchase_timestamp) * 100 + DAY(order_purchase_timestamp))</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Erro de Coluna Derivada]"
+                  description="Saída de Erro da Transformação Coluna Derivada"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Saída de Erro de Coluna Derivada"
+                  synchronousInputId="Package\Carregar FatoVendas\sk_data.Inputs[Entrada de Coluna Derivada]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Erro de Coluna Derivada].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Erro de Coluna Derivada].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Erro de Coluna Derivada].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Erro de Coluna Derivada].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída de Coluna Derivada]"
+              endId="Package\Carregar FatoVendas\Pesquisa DimCliente.Inputs[Entrada de Pesquisa]"
+              name="Saída de Coluna Derivada"
+              startId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa]"
+              endId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Inputs[Entrada de Pesquisa]"
+              name="Saída de Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa1]"
+              endId="Package\Carregar FatoVendas\Pesquisa DimData.Inputs[Entrada de Pesquisa]"
+              name="Saída de Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa2]"
+              endId="Package\Carregar FatoVendas\Pesquisa DimProduto.Inputs[Entrada de Pesquisa]"
+              name="Saída de Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa3]"
+              endId="Package\Carregar FatoVendas\FatoVendas.Inputs[Entrada de Destino OLE DB]"
+              name="Saída de Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída de Origem OLE DB]"
+              endId="Package\Carregar FatoVendas\sk_data.Inputs[Entrada de Coluna Derivada]"
+              name="Saída de Origem OLE DB"
+              startId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Limpar fato"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tarefa Executar SQL"
+      DTS:DTSID="{4F064EEB-B7B2-43D6-8DB8-940097142A00}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Limpar fato"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9034E3C7-16C5-4754-A381-0AD2305C2A00}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE FatoVendas;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restrição]"
+      DTS:CreationName=""
+      DTS:DTSID="{25CD7F93-664F-4BDA-9DC4-5C5FD1DEC8C7}"
+      DTS:From="Package\Limpar fato"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restrição"
+      DTS:To="Package\Carregar FatoVendas" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--Esta seção CDATA contém as informações de layout do pacote. A seção inclui informações como coordenadas (x,y), largura e altura.-->
+<!--Se você editar manualmente esta seção e cometer algum erro, poderá excluí-la. -->
+<!--O pacote ainda poderá ser carregado normalmente, mas as informações de layout anteriores serão perdidas e o designer reorganizará automaticamente os elementos na superfície de design.-->
+<Objects
+  Version="8">
+  <!--Cada nó abaixo conterá propriedades que não afetam o comportamento em tempo de execução.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="133,42"
+          Id="Package\Limpar fato"
+          TopLeft="415,69" />
+        <NodeLayout
+          Size="178,42"
+          Id="Package\Carregar FatoVendas"
+          TopLeft="389,164" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restrição]"
+          TopLeft="479.75,111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,53"
+              Start="0,0"
+              End="0,45.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,45.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Carregar FatoVendas">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="179,42"
+          Id="Package\Carregar FatoVendas\order_items + orders"
+          TopLeft="374,77" />
+        <NodeLayout
+          Size="116,42"
+          Id="Package\Carregar FatoVendas\sk_data"
+          TopLeft="407,155" />
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída de Origem OLE DB]"
+          TopLeft="464.25,119">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36"
+              Start="0,0"
+              End="0,28.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="174,42"
+          Id="Package\Carregar FatoVendas\Pesquisa DimCliente"
+          TopLeft="159,229" />
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída de Coluna Derivada]"
+          TopLeft="465,197">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-219,32"
+              Start="0,0"
+              End="-219,24.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,12" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,12"
+                    Point2="0,16"
+                    Point3="-4,16" />
+                  <mssgle:LineSegment
+                    End="-215,16" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-215,16"
+                    Point2="-219,16"
+                    Point3="-219,20" />
+                  <mssgle:LineSegment
+                    End="-219,24.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="179,42"
+          Id="Package\Carregar FatoVendas\Pesquisa DimProduto"
+          TopLeft="228,318" />
+        <NodeLayout
+          Size="187,42"
+          Id="Package\Carregar FatoVendas\Pesquisa DimVendedor"
+          TopLeft="385,386" />
+        <NodeLayout
+          Size="164,42"
+          Id="Package\Carregar FatoVendas\Pesquisa DimData"
+          TopLeft="537,456" />
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa]"
+          TopLeft="317.5,360">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="161,26"
+              Start="0,0"
+              End="161,18.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,9" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,9"
+                    Point2="0,13"
+                    Point3="4,13" />
+                  <mssgle:LineSegment
+                    End="157,13" />
+                  <mssgle:CubicBezierSegment
+                    Point1="157,13"
+                    Point2="161,13"
+                    Point3="161,17" />
+                  <mssgle:LineSegment
+                    End="161,18.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-4.8740234375,18,170.748046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa1]"
+          TopLeft="478.5,428">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="140.5,28"
+              Start="0,0"
+              End="140.5,20.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10"
+                    Point2="0,14"
+                    Point3="4,14" />
+                  <mssgle:LineSegment
+                    End="136.5,14" />
+                  <mssgle:CubicBezierSegment
+                    Point1="136.5,14"
+                    Point2="140.5,14"
+                    Point3="140.5,18" />
+                  <mssgle:LineSegment
+                    End="140.5,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-15.1240234375,19,170.748046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa2]"
+          TopLeft="246,271">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="71.5,47"
+              Start="0,0"
+              End="71.5,39.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.5"
+                    Point2="0,23.5"
+                    Point3="4,23.5" />
+                  <mssgle:LineSegment
+                    End="67.5,23.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="67.5,23.5"
+                    Point2="71.5,23.5"
+                    Point3="71.5,27.5" />
+                  <mssgle:LineSegment
+                    End="71.5,39.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-49.6240234375,28.5,170.748046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="134,42"
+          Id="Package\Carregar FatoVendas\FatoVendas"
+          TopLeft="665,83" />
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa3]"
+          TopLeft="645,456">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="87,-331"
+              Start="0,0"
+              End="87,-323.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,-130.31884057971" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,-130.31884057971"
+                    Point2="0,-134.31884057971"
+                    Point3="4,-134.31884057971" />
+                  <mssgle:LineSegment
+                    End="83,-134.31884057971" />
+                  <mssgle:CubicBezierSegment
+                    Point1="83,-134.31884057971"
+                    Point2="87,-134.31884057971"
+                    Point3="87,-138.31884057971" />
+                  <mssgle:LineSegment
+                    End="87,-323.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-41.8740234375,-129.31884057971,170.748046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Carregar FatoVendas\order_items + orders">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Carregar FatoVendas\Pesquisa DimCliente">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Carregar FatoVendas\Pesquisa DimProduto">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Carregar FatoVendas\Pesquisa DimVendedor">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Carregar FatoVendas\Pesquisa DimData">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Carregar FatoVendas\FatoVendas">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

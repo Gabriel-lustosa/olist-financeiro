@@ -11,8 +11,8 @@
   DTS:LocaleID="1046"
   DTS:ObjectName="03_fato"
   DTS:PackageType="5"
-  DTS:VersionBuild="15"
-  DTS:VersionGUID="{50E47838-F506-4554-A6FC-DEEDD91043E9}">
+  DTS:VersionBuild="18"
+  DTS:VersionGUID="{0FC13CDE-0FE0-4F48-AE4C-B551E448CADB}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>

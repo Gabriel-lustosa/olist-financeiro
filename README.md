@@ -39,7 +39,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 
 | # | Descoberta | Como foi medido | Status |
 |---|---|---|---|
-| 1 | **94,4% da receita vem de clientes one-shot** (R$ 14,5M de R$ 15,4M) | Classificação por `DISTINCTCOUNT(order_id)` sobre pedidos `delivered`, agrupado por `customer_unique_id` | Concluído |
+| 1 | **94,4% da receita vem de clientes one-shot** (R$ 14,6M de R$ 15,4M) | Classificação por `DISTINCTCOUNT(order_id)` sobre pedidos `delivered`, agrupado por `customer_unique_id` | Concluído |
 | 2 | **Nenhuma coorte com 700+ clientes passa de 0,72% de recompra em mês algum**; no mês seguinte à 1ª compra, só 0,48% volta | Matriz de coorte (mês de aquisição × meses depois) com tabela desconectada + `SUMX` por coorte; validada célula a célula contra o SQL (219/219) | Concluído |
 | 3 | **O problema é do negócio, não da categoria:** todas as categorias com R$ 100 mil+ têm de 88,8% a 98,1% da receita em clientes one-shot | `[% Receitas One-shot]` fatiado por categoria; participação com `REMOVEFILTERS` | Concluído |
 | 4 | **Nordeste retém menos (2,3% vs. 3,1% no Sudeste), mas tem ticket 34% maior** (R$ 201,52 vs. R$ 150,48), com o frete pesando 17,9% da receita (13,2% no Sudeste) | Coluna `Regiao` (`SWITCH(TRUE())`) + `[Taxa de Retenção]`, `[Ticket Médio]` e `[% Frete]` por região | Concluído |

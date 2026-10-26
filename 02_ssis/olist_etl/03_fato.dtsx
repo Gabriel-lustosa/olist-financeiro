@@ -11,12 +11,39 @@
   DTS:LocaleID="1046"
   DTS:ObjectName="03_fato"
   DTS:PackageType="5"
-  DTS:VersionBuild="12"
-  DTS:VersionGUID="{24AD5F19-19B5-409B-BB29-9DB07FADBAAE}">
+  DTS:VersionBuild="15"
+  DTS:VersionGUID="{50E47838-F506-4554-A6FC-DEEDD91043E9}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
-  <DTS:Variables />
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{008744EC-DAB0-4244-BA64-77D2D9688615}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="QtdOrfaos">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
   <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Alerta órfãos"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tarefa Executar SQL"
+      DTS:DTSID="{38C2EA4F-9A09-42F6-BD11-D795F1719DF7}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Alerta órfãos"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9034E3C7-16C5-4754-A381-0AD2305C2A00}"
+          SQLTask:SqlStatementSource="THROW 50001, 'FatoVendas carregada com linhas orfas. Veja a variavel QtdOrfaos.', 1;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Carregar FatoVendas"
       DTS:CreationName="Microsoft.Pipeline"
@@ -31,6 +58,35 @@
         <pipeline
           version="1">
           <components>
+            <component
+              refId="Package\Carregar FatoVendas\Contar orfãos"
+              componentClassID="Microsoft.RowCount"
+              contactInfo="Contagem de Linhas;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;0"
+              description="Conta as linhas à medida que elas passam por um fluxo de dados. Por exemplo, use o número de linhas processado para determinar se operações de limpeza devem ser executadas ou não, ou atualize o texto em uma mensagem de email para comunicar o status de processamento."
+              name="Contar orfãos">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Especifica a variável que conterá a contagem de linhas."
+                  name="VariableName">User::QtdOrfaos</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\Contar orfãos.Inputs[Contagem de Linhas Entrada 1]"
+                  hasSideEffects="true"
+                  name="Contagem de Linhas Entrada 1">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\Contar orfãos.Outputs[Contagem de Linhas Saída 1]"
+                  name="Contagem de Linhas Saída 1"
+                  synchronousInputId="Package\Carregar FatoVendas\Contar orfãos.Inputs[Contagem de Linhas Entrada 1]">
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
             <component
               refId="Package\Carregar FatoVendas\FatoVendas"
               componentClassID="Microsoft.OLEDBDestination"
@@ -241,6 +297,708 @@
                       lineageId="Package\Carregar FatoVendas\FatoVendas.Outputs[Saída de Erro de Destino OLE DB].Columns[ErrorColumn]"
                       name="ErrorColumn"
                       specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Carregar FatoVendas\Juntar orfãos"
+              componentClassID="Microsoft.UnionAll"
+              contactInfo="Unir Tudo;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos os Direitos Reservados; http://www.microsoft.com/sql/support;1"
+              description="Combina linhas de vários fluxos de dados sem classificação. Por exemplo, adicione novamente as linhas a um fluxo de dados após a correção de erros. Se a classificação for importante, é recomendável usar a transformação Mesclagem."
+              name="Juntar orfãos"
+              version="1">
+              <inputs>
+                <input
+                  refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1]"
+                  name="Unir Tudo Entrada 1">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[order_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="order_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[order_item_id]"
+                      cachedDataType="i4"
+                      cachedName="order_item_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_item_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_item_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[product_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="product_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[product_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[seller_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="seller_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[seller_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[price]"
+                      cachedDataType="numeric"
+                      cachedName="price"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[price]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[price]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[freight_value]"
+                      cachedDataType="numeric"
+                      cachedName="freight_value"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[freight_value]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[freight_value]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[customer_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="customer_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[customer_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[order_status]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="order_status"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_status]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_status]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[order_purchase_timestamp]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="order_purchase_timestamp"
+                      cachedScale="7"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_purchase_timestamp]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1].Columns[sk_data]"
+                      cachedDataType="i4"
+                      cachedName="sk_data"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[sk_data]}</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1]"
+                  hasSideEffects="true"
+                  name="Entrada Unir Tudo 1">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[order_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="order_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[order_item_id]"
+                      cachedDataType="i4"
+                      cachedName="order_item_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_item_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_item_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[product_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="product_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[product_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[seller_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="seller_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[seller_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[price]"
+                      cachedDataType="numeric"
+                      cachedName="price"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[price]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[price]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[freight_value]"
+                      cachedDataType="numeric"
+                      cachedName="freight_value"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[freight_value]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[freight_value]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[customer_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="customer_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[customer_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[order_status]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="order_status"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_status]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_status]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[order_purchase_timestamp]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="order_purchase_timestamp"
+                      cachedScale="7"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_purchase_timestamp]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1].Columns[sk_data]"
+                      cachedDataType="i4"
+                      cachedName="sk_data"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[sk_data]}</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2]"
+                  hasSideEffects="true"
+                  name="Entrada Unir Tudo 2">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[order_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="order_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[order_item_id]"
+                      cachedDataType="i4"
+                      cachedName="order_item_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_item_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_item_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[product_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="product_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[product_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[seller_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="seller_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[seller_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[price]"
+                      cachedDataType="numeric"
+                      cachedName="price"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[price]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[price]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[freight_value]"
+                      cachedDataType="numeric"
+                      cachedName="freight_value"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[freight_value]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[freight_value]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[customer_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="customer_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[customer_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[order_status]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="order_status"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_status]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_status]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[order_purchase_timestamp]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="order_purchase_timestamp"
+                      cachedScale="7"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_purchase_timestamp]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2].Columns[sk_data]"
+                      cachedDataType="i4"
+                      cachedName="sk_data"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[sk_data]}</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3]"
+                  hasSideEffects="true"
+                  name="Entrada Unir Tudo 3">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[order_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="order_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[order_item_id]"
+                      cachedDataType="i4"
+                      cachedName="order_item_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_item_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_item_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[product_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="product_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[product_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[product_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[seller_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="seller_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[seller_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[seller_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[price]"
+                      cachedDataType="numeric"
+                      cachedName="price"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[price]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[price]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[freight_value]"
+                      cachedDataType="numeric"
+                      cachedName="freight_value"
+                      cachedPrecision="10"
+                      cachedScale="2"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[freight_value]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[freight_value]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[customer_id]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="customer_id"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[customer_id]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[customer_id]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[order_status]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="order_status"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_status]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_status]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[order_purchase_timestamp]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="order_purchase_timestamp"
+                      cachedScale="7"
+                      lineageId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB].Columns[order_purchase_timestamp]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_purchase_timestamp]}</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3].Columns[sk_data]"
+                      cachedDataType="i4"
+                      cachedName="sk_data"
+                      lineageId="Package\Carregar FatoVendas\sk_data.Outputs[Saída de Coluna Derivada].Columns[sk_data]">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Identificação de linhagem de coluna de saída"
+                          name="OutputColumnLineageID">#{Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[sk_data]}</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 4]"
+                  dangling="true"
+                  hasSideEffects="true"
+                  name="Entrada Unir Tudo 4">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1]"
+                  name="Unir Tudo Saída 1">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_id]"
+                      name="order_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_item_id]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_item_id]"
+                      name="order_item_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[product_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[product_id]"
+                      name="product_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[seller_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[seller_id]"
+                      name="seller_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[price]"
+                      dataType="numeric"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[price]"
+                      name="price"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[freight_value]"
+                      dataType="numeric"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[freight_value]"
+                      name="freight_value"
+                      precision="10"
+                      scale="2" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[customer_id]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[customer_id]"
+                      name="customer_id" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_status]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_status]"
+                      name="order_status" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_purchase_timestamp]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[order_purchase_timestamp]"
+                      name="order_purchase_timestamp"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[sk_data]"
+                      dataType="i4"
+                      lineageId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1].Columns[sk_data]"
+                      name="sk_data" />
                   </outputColumns>
                   <externalMetadataColumns />
                 </output>
@@ -587,7 +1345,7 @@ where [refTable].[customer_id] = ?</property>
                   dataType="System.Int32"
                   description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
                   name="NoMatchBehavior"
-                  typeConverter="LookupNoMatchBehavior">0</property>
+                  typeConverter="LookupNoMatchBehavior">1</property>
                 <property
                   dataType="System.Int32"
                   description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
@@ -657,7 +1415,6 @@ where [refTable].[customer_id] = ?</property>
                 <output
                   refId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída de Correspondência de Pesquisa]"
                   errorOrTruncationOperation="Pesquisa"
-                  errorRowDisposition="FailComponent"
                   exclusionGroup="1"
                   name="Saída de Correspondência de Pesquisa"
                   synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimCliente.Inputs[Entrada de Pesquisa]">
@@ -747,7 +1504,7 @@ where [refTable].[sk_data] = ?</property>
                   dataType="System.Int32"
                   description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
                   name="NoMatchBehavior"
-                  typeConverter="LookupNoMatchBehavior">0</property>
+                  typeConverter="LookupNoMatchBehavior">1</property>
                 <property
                   dataType="System.Int32"
                   description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
@@ -815,7 +1572,6 @@ where [refTable].[sk_data] = ?</property>
                 <output
                   refId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída de Correspondência de Pesquisa]"
                   errorOrTruncationOperation="Pesquisa"
-                  errorRowDisposition="FailComponent"
                   exclusionGroup="1"
                   name="Saída de Correspondência de Pesquisa"
                   synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimData.Inputs[Entrada de Pesquisa]">
@@ -889,7 +1645,7 @@ where [refTable].[product_id] = ?</property>
                   dataType="System.Int32"
                   description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
                   name="NoMatchBehavior"
-                  typeConverter="LookupNoMatchBehavior">0</property>
+                  typeConverter="LookupNoMatchBehavior">1</property>
                 <property
                   dataType="System.Int32"
                   description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
@@ -959,7 +1715,6 @@ where [refTable].[product_id] = ?</property>
                 <output
                   refId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída de Correspondência de Pesquisa]"
                   errorOrTruncationOperation="Pesquisa"
-                  errorRowDisposition="FailComponent"
                   exclusionGroup="1"
                   name="Saída de Correspondência de Pesquisa"
                   synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimProduto.Inputs[Entrada de Pesquisa]">
@@ -1049,7 +1804,7 @@ where [refTable].[seller_id] = ?</property>
                   dataType="System.Int32"
                   description="Especifica como a transformação Pesquisa trata as linhas sem entradas correspondentes no conjunto de dados de referência."
                   name="NoMatchBehavior"
-                  typeConverter="LookupNoMatchBehavior">0</property>
+                  typeConverter="LookupNoMatchBehavior">1</property>
                 <property
                   dataType="System.Int32"
                   description="Especifica a porcentagem do cache alocada para linhas sem entradas correspondentes no conjunto de dados de referência."
@@ -1119,7 +1874,6 @@ where [refTable].[seller_id] = ?</property>
                 <output
                   refId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída de Correspondência de Pesquisa]"
                   errorOrTruncationOperation="Pesquisa"
-                  errorRowDisposition="FailComponent"
                   exclusionGroup="1"
                   name="Saída de Correspondência de Pesquisa"
                   synchronousInputId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Inputs[Entrada de Pesquisa]">
@@ -1286,6 +2040,31 @@ where [refTable].[seller_id] = ?</property>
               endId="Package\Carregar FatoVendas\sk_data.Inputs[Entrada de Coluna Derivada]"
               name="Saída de Origem OLE DB"
               startId="Package\Carregar FatoVendas\order_items + orders.Outputs[Saída de Origem OLE DB]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa]"
+              endId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Unir Tudo Entrada 1]"
+              name="Saída Sem Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimCliente.Outputs[Saída Sem Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa1]"
+              endId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 1]"
+              name="Saída Sem Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimProduto.Outputs[Saída Sem Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa2]"
+              endId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 2]"
+              name="Saída Sem Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimVendedor.Outputs[Saída Sem Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa3]"
+              endId="Package\Carregar FatoVendas\Juntar orfãos.Inputs[Entrada Unir Tudo 3]"
+              name="Saída Sem Correspondência de Pesquisa"
+              startId="Package\Carregar FatoVendas\Pesquisa DimData.Outputs[Saída Sem Correspondência de Pesquisa]" />
+            <path
+              refId="Package\Carregar FatoVendas.Paths[Unir Tudo Saída 1]"
+              endId="Package\Carregar FatoVendas\Contar orfãos.Inputs[Contagem de Linhas Entrada 1]"
+              name="Unir Tudo Saída 1"
+              startId="Package\Carregar FatoVendas\Juntar orfãos.Outputs[Unir Tudo Saída 1]" />
           </paths>
         </pipeline>
       </DTS:ObjectData>
@@ -1317,6 +2096,16 @@ where [refTable].[seller_id] = ?</property>
       DTS:LogicalAnd="True"
       DTS:ObjectName="Restrição"
       DTS:To="Package\Carregar FatoVendas" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Restrição 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{086B4174-803C-4014-A0D7-459FCF9B81C9}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::QtdOrfaos] &gt; 0"
+      DTS:From="Package\Carregar FatoVendas"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Restrição 1"
+      DTS:To="Package\Alerta órfãos" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--Esta seção CDATA contém as informações de layout do pacote. A seção inclui informações como coordenadas (x,y), largura e altura.-->
@@ -1329,7 +2118,7 @@ where [refTable].[seller_id] = ?</property>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="133,42"
           Id="Package\Limpar fato"
@@ -1360,6 +2149,46 @@ where [refTable].[seller_id] = ?</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="139,42"
+          Id="Package\Alerta órfãos"
+          TopLeft="400,257" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Restrição 1]"
+          TopLeft="478,206">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-8.5,51"
+              Start="0,0"
+              End="-8.5,43.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,21.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,21.5"
+                    Point2="0,25.5"
+                    Point3="-4,25.5" />
+                  <mssgle:LineSegment
+                    End="-4.5,25.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-4.5,25.5"
+                    Point2="-8.5,25.5"
+                    Point3="-8.5,29.5" />
+                  <mssgle:LineSegment
+                    End="-8.5,43.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-12.25,30.5,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -1367,29 +2196,29 @@ where [refTable].[seller_id] = ?</property>
     design-time-name="Package\Carregar FatoVendas">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="179,42"
           Id="Package\Carregar FatoVendas\order_items + orders"
-          TopLeft="374,77" />
+          TopLeft="61,7" />
         <NodeLayout
           Size="116,42"
           Id="Package\Carregar FatoVendas\sk_data"
-          TopLeft="407,155" />
+          TopLeft="95,104" />
         <EdgeLayout
           Id="Package\Carregar FatoVendas.Paths[Saída de Origem OLE DB]"
-          TopLeft="464.25,119">
+          TopLeft="151.75,49">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,36"
+              EndConnector="0,55"
               Start="0,0"
-              End="0,28.5">
+              End="0,47.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,28.5" />
+                    End="0,47.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1401,33 +2230,21 @@ where [refTable].[seller_id] = ?</property>
         <NodeLayout
           Size="174,42"
           Id="Package\Carregar FatoVendas\Pesquisa DimCliente"
-          TopLeft="159,229" />
+          TopLeft="66,234" />
         <EdgeLayout
           Id="Package\Carregar FatoVendas.Paths[Saída de Coluna Derivada]"
-          TopLeft="465,197">
+          TopLeft="153,146">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-219,32"
+              EndConnector="0,88"
               Start="0,0"
-              End="-219,24.5">
+              End="0,80.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,12" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,12"
-                    Point2="0,16"
-                    Point3="-4,16" />
-                  <mssgle:LineSegment
-                    End="-215,16" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-215,16"
-                    Point2="-219,16"
-                    Point3="-219,20" />
-                  <mssgle:LineSegment
-                    End="-219,24.5" />
+                    End="0,80.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1439,161 +2256,335 @@ where [refTable].[seller_id] = ?</property>
         <NodeLayout
           Size="179,42"
           Id="Package\Carregar FatoVendas\Pesquisa DimProduto"
-          TopLeft="228,318" />
+          TopLeft="263,234" />
         <NodeLayout
           Size="187,42"
           Id="Package\Carregar FatoVendas\Pesquisa DimVendedor"
-          TopLeft="385,386" />
+          TopLeft="462,234" />
         <NodeLayout
           Size="164,42"
           Id="Package\Carregar FatoVendas\Pesquisa DimData"
-          TopLeft="537,456" />
+          TopLeft="670,233" />
         <EdgeLayout
           Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa]"
-          TopLeft="317.5,360">
+          TopLeft="352.5,234">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="161,26"
+              EndConnector="203,0"
               Start="0,0"
-              End="161,18.5">
+              End="203,-7.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,9" />
+                    End="0,-18.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,9"
-                    Point2="0,13"
-                    Point3="4,13" />
+                    Point1="0,-18.5"
+                    Point2="0,-22.5"
+                    Point3="4,-22.5" />
                   <mssgle:LineSegment
-                    End="157,13" />
+                    End="199,-22.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="157,13"
-                    Point2="161,13"
-                    Point3="161,17" />
+                    Point1="199,-22.5"
+                    Point2="203,-22.5"
+                    Point3="203,-18.5" />
                   <mssgle:LineSegment
-                    End="161,18.5" />
+                    End="203,-7.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-4.8740234375,18,170.748046875,12.1953125"
+              BoundingBox="16.1259765625,-17.5,170.748046875,12.1953125"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa1]"
-          TopLeft="478.5,428">
+          TopLeft="555.5,276">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="140.5,28"
+              EndConnector="196.5,-1"
               Start="0,0"
-              End="140.5,20.5">
+              End="196.5,6.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,10" />
+                    End="0,18.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,10"
-                    Point2="0,14"
-                    Point3="4,14" />
+                    Point1="0,18.5"
+                    Point2="0,22.5"
+                    Point3="4,22.5" />
                   <mssgle:LineSegment
-                    End="136.5,14" />
+                    End="192.5,22.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="136.5,14"
-                    Point2="140.5,14"
-                    Point3="140.5,18" />
+                    Point1="192.5,22.5"
+                    Point2="196.5,22.5"
+                    Point3="196.5,18.5" />
                   <mssgle:LineSegment
-                    End="140.5,20.5" />
+                    End="196.5,6.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-15.1240234375,19,170.748046875,12.1953125"
+              BoundingBox="12.8759765625,27.5,170.748046875,12.1953125"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa2]"
-          TopLeft="246,271">
+          TopLeft="240,255">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="71.5,47"
+              EndConnector="23,0"
               Start="0,0"
-              End="71.5,39.5">
+              End="15.5,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,19.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,19.5"
-                    Point2="0,23.5"
-                    Point3="4,23.5" />
-                  <mssgle:LineSegment
-                    End="67.5,23.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="67.5,23.5"
-                    Point2="71.5,23.5"
-                    Point3="71.5,27.5" />
-                  <mssgle:LineSegment
-                    End="71.5,39.5" />
+                    End="15.5,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-49.6240234375,28.5,170.748046875,12.1953125"
+              BoundingBox="-77.6240234375,5,170.748046875,12.1953125"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <NodeLayout
           Size="134,42"
           Id="Package\Carregar FatoVendas\FatoVendas"
-          TopLeft="665,83" />
+          TopLeft="929,132" />
         <EdgeLayout
           Id="Package\Carregar FatoVendas.Paths[Saída de Correspondência de Pesquisa3]"
-          TopLeft="645,456">
+          TopLeft="752,233">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="87,-331"
+              EndConnector="244,-59"
               Start="0,0"
-              End="87,-323.5">
+              End="244,-51.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,-130.31884057971" />
+                    End="0,-25.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,-130.31884057971"
-                    Point2="0,-134.31884057971"
-                    Point3="4,-134.31884057971" />
+                    Point1="0,-25.5"
+                    Point2="0,-29.5"
+                    Point3="4,-29.5" />
                   <mssgle:LineSegment
-                    End="83,-134.31884057971" />
+                    End="240,-29.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="83,-134.31884057971"
-                    Point2="87,-134.31884057971"
-                    Point3="87,-138.31884057971" />
+                    Point1="240,-29.5"
+                    Point2="244,-29.5"
+                    Point3="244,-33.5" />
                   <mssgle:LineSegment
-                    End="87,-323.5" />
+                    End="244,-51.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-41.8740234375,-129.31884057971,170.748046875,12.1953125"
+              BoundingBox="36.6259765625,-24.5,170.748046875,12.1953125"
               RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="141,42"
+          Id="Package\Carregar FatoVendas\Juntar orfãos"
+          TopLeft="445,414" />
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa]"
+          TopLeft="153,276">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="300,138"
+              Start="0,0"
+              End="300,145.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,151" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,151"
+                    Point2="0,155"
+                    Point3="4,155" />
+                  <mssgle:LineSegment
+                    End="296,155" />
+                  <mssgle:CubicBezierSegment
+                    Point1="296,155"
+                    Point2="300,155"
+                    Point3="300,151" />
+                  <mssgle:LineSegment
+                    End="300,145.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="60.4059765625,160,179.188046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa1]"
+          TopLeft="352.5,276">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="113.166666666667,138"
+              Start="0,0"
+              End="113.166666666667,130.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,77.8709677419355" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,77.8709677419355"
+                    Point2="0,81.8709677419355"
+                    Point3="4,81.8709677419355" />
+                  <mssgle:LineSegment
+                    End="109.166666666667,81.8709677419355" />
+                  <mssgle:CubicBezierSegment
+                    Point1="109.166666666667,81.8709677419355"
+                    Point2="113.166666666667,81.8709677419355"
+                    Point3="113.166666666667,85.8709677419355" />
+                  <mssgle:LineSegment
+                    End="113.166666666667,130.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-33.0106901041667,86.8709677419355,179.188046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa2]"
+          TopLeft="525.666666666667,276">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="23.0833333333334,138"
+              Start="0,0"
+              End="23.0833333333334,130.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,73.7046619936962" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,73.7046619936962"
+                    Point2="0,77.7046619936962"
+                    Point3="4,77.7046619936962" />
+                  <mssgle:LineSegment
+                    End="19.0833333333334,77.7046619936962" />
+                  <mssgle:CubicBezierSegment
+                    Point1="19.0833333333334,77.7046619936962"
+                    Point2="23.0833333333334,77.7046619936962"
+                    Point3="23.0833333333334,81.7046619936962" />
+                  <mssgle:LineSegment
+                    End="23.0833333333334,130.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-78.0523567708333,82.7046619936962,179.188046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Saída Sem Correspondência de Pesquisa3]"
+          TopLeft="726,275">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-148,139"
+              Start="0,0"
+              End="-148,146.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,152.986062070247" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,152.986062070247"
+                    Point2="0,156.986062070247"
+                    Point3="-4,156.986062070247" />
+                  <mssgle:LineSegment
+                    End="-144,156.986062070247" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-144,156.986062070247"
+                    Point2="-148,156.986062070247"
+                    Point3="-148,152.986062070247" />
+                  <mssgle:LineSegment
+                    End="-148,146.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-163.5940234375,161.986062070247,179.188046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="143,42"
+          Id="Package\Carregar FatoVendas\Contar orfãos"
+          TopLeft="435,500" />
+        <EdgeLayout
+          Id="Package\Carregar FatoVendas.Paths[Unir Tudo Saída 1]"
+          TopLeft="515.5,456">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-9,44"
+              Start="0,0"
+              End="-9,36.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,18"
+                    Point2="0,22"
+                    Point3="-4,22" />
+                  <mssgle:LineSegment
+                    End="-5,22" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-5,22"
+                    Point2="-9,22"
+                    Point3="-9,26" />
+                  <mssgle:LineSegment
+                    End="-9,36.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>

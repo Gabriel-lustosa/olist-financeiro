@@ -53,7 +53,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 | Data Warehouse | **SQL Server** | Star schema; carga dos CSVs via `BULK INSERT` | Pronto |
 | ETL | **SSIS** | Substituir a carga por scripts por um pipeline orquestrado | Planejado |
 | Modelo semântico | **SSAS Tabular** | Migrar medidas DAX e hierarquias do Power BI para um modelo centralizado | Planejado |
-| Visualização | **Power BI** | Modelo estrela, medidas DAX e dashboard final | Em construção |
+| Visualização | **Power BI** | Modelo estrela, medidas DAX e dashboard final | Pronto |
 
 ---
 

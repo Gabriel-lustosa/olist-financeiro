@@ -4,6 +4,7 @@
 ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=flat&logo=powerbi&logoColor=black)
 ![DAX](https://img.shields.io/badge/DAX-0078D4?style=flat)
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-orange?style=flat)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriel%20Lustosa-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gabriellustosa1/)
 
 Projeto de portfólio em **Business Intelligence** usando o dataset público **Olist** (e-commerce brasileiro, 2016–2018) para investigar performance financeira e retenção de clientes.
 

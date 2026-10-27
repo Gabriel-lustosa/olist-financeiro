@@ -18,6 +18,9 @@ Objetivo de negócio: diagnosticar a retenção de ~3% (ver `README.md`).
 ## Ambiente e pegadinhas conhecidas
 - `sqlcmd`: usar `-S localhost -E -C` (certificado do ODBC 18) e `-f 65001` quando o `.sql` tiver acento (o caminho do repositório tem "PORTFÓLIO"). Rodar pelo PowerShell; no Git Bash o `-E` conflita com variáveis de ambiente.
 - SSIS: conexão OLE DB com **Microsoft OLE DB Driver 18 (`MSOLEDBSQL`)**. O Driver 19 dá "provedor não tem suporte" no designer.
+- DTExec fora do Visual Studio exige o recurso **Integration Services** instalado no SQL Server (sem ele: erro `0xC000F427`). Rodar a partir do `.ispac` em `bin/Development/` (recompilar após mexer nos pacotes).
+- DTExec com `.ispac`: trocar parâmetro de projeto com `/Set '\Package.Variables[$Project::PastaDados];<valor>'`. O `/Par` só funciona com `/ISServer` (SSISDB).
+- SSAS: instância padrão Tabular em `localhost` (serviço `MSSQLServerOLAPService`).
 - Visual Studio está em português: citar menus e componentes pelo nome em PT (Origem OLE DB, Pesquisa, Coluna Derivada...).
 - CSVs: 5 são LF; `product_category_name_translation.csv` é CRLF com BOM; só `olist_sellers_dataset.csv` tem não-ASCII (UTF-8, inclui um til combinante U+0303). Contar bytes CR com `od`, não com `grep`.
 - O projeto está no OneDrive: o Visual Studio pode avisar "arquivo alterado externamente".

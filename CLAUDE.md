@@ -6,7 +6,7 @@ Objetivo de negócio: diagnosticar a retenção de ~3% (ver `README.md`).
 ## Estrutura
 - `01_sql/` — pipeline do DW em SQL (01–04) e gabarito das análises (05). É a referência de verdade dos números.
 - `02_ssis/` — projeto `olist_etl` (pacotes `01_staging`, `02_dimensoes`, `03_fato`, `00_master`) + `00_preparar_banco_ssis.sql`.
-- `03_ssas/` — modelo SSAS Tabular (ainda não iniciado).
+- `03_ssas/` — projeto SSAS Tabular `olist_tabular` (etapa 6, em andamento; roteiro abaixo).
 - `04_powerbi/` — `olist_financeiro.pbix` e `medidas_dax.md` (fonte da verdade das medidas DAX; atualizar ao criar/alterar medida).
 - `dados/` — CSVs do Kaggle, fora do Git.
 
@@ -20,7 +20,7 @@ Objetivo de negócio: diagnosticar a retenção de ~3% (ver `README.md`).
 - SSIS: conexão OLE DB com **Microsoft OLE DB Driver 18 (`MSOLEDBSQL`)**. O Driver 19 dá "provedor não tem suporte" no designer.
 - DTExec fora do Visual Studio exige o recurso **Integration Services** instalado no SQL Server (sem ele: erro `0xC000F427`). Rodar a partir do `.ispac` em `bin/Development/` (recompilar após mexer nos pacotes).
 - DTExec com `.ispac`: trocar parâmetro de projeto com `/Set '\Package.Variables[$Project::PastaDados];<valor>'`. O `/Par` só funciona com `/ISServer` (SSISDB).
-- SSAS: instância padrão Tabular em `localhost` (serviço `MSSQLServerOLAPService`).
+- SSAS: instância padrão Tabular em `localhost` (serviço `MSSQLServerOLAPService`). A conta `NT Service\MSSQLServerOLAPService` **não tem login no SQL Server**: sem ele, o processamento do modelo implantado falha com "Falha de logon". Correção proposta (pendente de autorização do usuário, pois mexe na segurança do `olist_financeiro`): `CREATE LOGIN ... FROM WINDOWS` + `CREATE USER` + `db_datareader` no `olist_financeiro` (só leitura).
 - Visual Studio está em português: citar menus e componentes pelo nome em PT (Origem OLE DB, Pesquisa, Coluna Derivada...).
 - CSVs: 5 são LF; `product_category_name_translation.csv` é CRLF com BOM; só `olist_sellers_dataset.csv` tem não-ASCII (UTF-8, inclui um til combinante U+0303). Contar bytes CR com `od`, não com `grep`.
 - O projeto está no OneDrive: o Visual Studio pode avisar "arquivo alterado externamente".
@@ -36,6 +36,18 @@ Objetivo de negócio: diagnosticar a retenção de ~3% (ver `README.md`).
 | Receita realizada (`delivered`) | R$ 15.419.773,75 |
 
 Divergências propositais SSIS × DW SQL: 1 vendedor (`sao paulo` no SSIS × `sa~o paulo` no SQL); SK da DimProduto em ordem diferente (comparar pela NK `product_id`).
+
+## Etapa 6 — SSAS Tabular (roteiro)
+O modelo do Power BI vira um banco no SSAS; `04_powerbi/medidas_dax.md` é o roteiro e o gabarito. Fonte: DW oficial `olist_financeiro`, só leitura; importar só as 5 tabelas do star schema.
+
+| Aula | O quê |
+|---|---|
+| 6.1 | Projeto `olist_tabular` em `03_ssas/` (workspace integrado, compatibilidade mais alta do SQL 2025), importar DimCliente/DimData/DimProduto/DimVendedor/FatoVendas (personificação: conta do serviço), 4 relacionamentos Fato → Dims, implantar em `localhost` |
+| 6.2 | 8 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" |
+| 6.3 | 16 medidas + formatos, validadas contra o gabarito |
+| 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas |
+| 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) |
+| 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub |
 
 ## Validação
 - Toda carga nova é comparada com o DW SQL: contagem + `EXCEPT` nos dois sentidos (esperado 0/0) + totais financeiros.

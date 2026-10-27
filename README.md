@@ -51,7 +51,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 | Camada | Ferramenta | Papel | Situação |
 |---|---|---|---|
 | Data Warehouse | **SQL Server** | Star schema; carga dos CSVs via `BULK INSERT` | Pronto |
-| ETL | **SSIS** | Substituir a carga por scripts por um pipeline orquestrado | Planejado |
+| ETL | **SSIS** | Pipeline orquestrado (staging → dimensões → fato) que reproduz a carga SQL, com tratamento de órfãos e execução por linha de comando | Pronto |
 | Modelo semântico | **SSAS Tabular** | Migrar medidas DAX e hierarquias do Power BI para um modelo centralizado | Planejado |
 | Visualização | **Power BI** | Modelo estrela, medidas DAX e dashboard final | Pronto |
 
@@ -91,6 +91,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 - SQL Server 2019+ com SSMS
 - Power BI Desktop (versão de outubro/2024 ou mais recente)
 - Baixar os 9 CSVs do [Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) e colocar em `dados/`
+- Para o SSIS: SQL Server 2025 com o recurso **Integration Services** + Visual Studio 2022+ com a extensão *SQL Server Integration Services Projects*
 
 ### Ordem dos scripts (`01_sql/`)
 ```sql
@@ -118,6 +119,28 @@ SELECT COUNT(*) FROM FatoVendas;        -- esperado: 112.650
 SELECT SUM(valor_total) FROM FatoVendas; -- esperado: 15.843.553,24
 ```
 
+### Alternativa: carga via SSIS (`02_ssis/`)
+O projeto `olist_etl` refaz a mesma carga em pacotes SSIS, num banco separado (`olist_financeiro_ssis`) para não arriscar o DW que alimenta o Power BI.
+
+1. Rodar `02_ssis/00_preparar_banco_ssis.sql` (cria o banco vazio, com a mesma estrutura do DW).
+2. Abrir `02_ssis/olist_etl/olist_etl.slnx` no Visual Studio e compilar (gera o `.ispac` em `bin/Development/`).
+3. Rodar o `00_master.dtsx` no Visual Studio, ou pelo PowerShell a partir da raiz do repositório:
+
+```powershell
+& "C:\Program Files\Microsoft SQL Server\170\DTS\Binn\DTExec.exe" /Project "02_ssis\olist_etl\bin\Development\olist_etl.ispac" /Package "00_master.dtsx" /Set '\Package.Variables[$Project::PastaDados];C:\caminho\para\dados\'
+```
+
+`PastaDados` é a pasta dos CSVs (com `\` no fim). Código de saída `0` = sucesso. Rodar fora do Visual Studio exige o recurso Integration Services instalado no SQL Server; sem ele, o DTExec falha com `0xC000F427`.
+
+| Pacote | O que faz |
+|---|---|
+| `00_master` | Orquestra os três abaixo em sequência (Executar Pacote) |
+| `01_staging` | 6 CSVs → tabelas de staging; `sellers` lido em UTF-8 e convertido para 1252 |
+| `02_dimensoes` | Staging → DimCliente, DimProduto (Pesquisa da tradução = LEFT JOIN), DimVendedor, DimData |
+| `03_fato` | Staging + dimensões → FatoVendas (4 Pesquisas trocam NK por SK); linhas órfãs são contadas e disparam erro |
+
+**Validação SSIS × SQL:** as 11 tabelas comparadas com `EXCEPT` nos dois sentidos. Todas idênticas, e a fato com 112.650 linhas e receita igual ao centavo, exceto 1 diferença proposital: um vendedor de `sao paulo` cujo CSV traz um til combinante (U+0303), que o SSIS remove e o `BULK INSERT` gravou como `sa~o paulo`. A comparação também revelou um bug na carga SQL original (`\r` sobrando nas categorias em inglês), já corrigido.
+
 ### Power BI
 Abrir `04_powerbi/olist_financeiro.pbix` e apontar a fonte de dados para a instância local do SQL Server (banco `olist_financeiro`). Todas as medidas estão documentadas em [`medidas_dax.md`](04_powerbi/medidas_dax.md).
 
@@ -128,7 +151,7 @@ Abrir `04_powerbi/olist_financeiro.pbix` e apontar a fonte de dados para a inst�
 ```
 olist-financeiro/
 ├── 01_sql/          Scripts de criação, carga e análise (SQL Server)
-├── 02_ssis/         Pacotes de ETL (planejado)
+├── 02_ssis/         Projeto SSIS olist_etl (4 pacotes) + script do banco de teste
 ├── 03_ssas/         Modelo tabular (planejado)
 ├── 04_powerbi/      Relatório .pbix + medidas_dax.md (DAX documentado) + img/ (prints)
 ├── dados/           CSVs Olist (não versionado — baixar do Kaggle)
@@ -142,6 +165,7 @@ olist-financeiro/
 - **Modelagem dimensional**: star schema com surrogate keys, chaves degeneradas, dimensão de data gerada por CTE recursiva, coluna calculada persistida (`valor_total`)
 - **SQL avançado**: BULK INSERT com `CODEPAGE 65001` (UTF-8), lookup de SKs via INNER JOIN, CTE recursiva, validações `COUNT(*)`/`SUM()` origem vs. destino, análise de coorte de aquisição
 - **DAX**: colunas calculadas com transição de contexto + `ALLEXCEPT` por `customer_unique_id`, `MINX` + `RELATED` contra relacionamento de direção única, tabelas virtuais com `SUMMARIZE`/`ADDCOLUMNS`, divisão segura com `DIVIDE` ([ver todo o DAX](04_powerbi/medidas_dax.md))
+- **ETL com SSIS**: Origem de Arquivo Simples com tratamento de encoding (UTF-8 → 1252, remoção de diacrítico combinante), Pesquisa (lookup) para trocar NK por SK, órfãos desviados para saída sem correspondência + Contagem de Linhas + restrição de precedência com expressão, pacote master com Executar Pacote e execução via DTExec com código de saída
 - **Análise de retenção**: classificação one-shot vs. recorrente e decomposição da receita por tipo de cliente
 - **Documentação**: scripts com cabeçalho, convenções explícitas, comentários sobre pegadinhas do dataset (`customer_id` vs. `customer_unique_id`)
 
@@ -178,7 +202,7 @@ Top 15 categorias com participação na receita e % one-shot; taxa de retenção
 | Dashboard Power BI: Retenção por Coorte | Pronto |
 | Dashboard Power BI: Categorias e Regiões | Pronto |
 | Screenshots do dashboard no README | Pronto |
-| Pacotes SSIS | Planejado |
+| Pacotes SSIS | Pronto (4 pacotes, validados contra o DW SQL) |
 | Modelo SSAS Tabular | Planejado |
 
 ---

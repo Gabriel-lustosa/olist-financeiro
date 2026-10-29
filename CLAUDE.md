@@ -41,14 +41,14 @@ Divergências propositais SSIS × DW SQL: 1 vendedor (`sao paulo` no SSIS × `sa
 ## Etapa 6 — SSAS Tabular (roteiro)
 O modelo do Power BI vira um banco no SSAS; `04_powerbi/medidas_dax.md` é o roteiro e o gabarito. Fonte: DW oficial `olist_financeiro`, só leitura; importar só as 5 tabelas do star schema.
 
-| Aula | O quê |
-|---|---|
-| 6.1 | Projeto `olist_tabular` em `03_ssas/` (workspace integrado, compatibilidade mais alta do SQL 2025), importar DimCliente/DimData/DimProduto/DimVendedor/FatoVendas (personificação: conta do serviço), 4 relacionamentos Fato → Dims, implantar em `localhost` |
-| 6.2 | 8 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" |
-| 6.3 | 16 medidas + formatos, validadas contra o gabarito |
-| 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas |
-| 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) |
-| 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub |
+| Aula | O quê | Status |
+|---|---|---|
+| 6.1 | Projeto `olist_tabular` em `03_ssas/` (workspace integrado, compatibilidade mais alta do SQL 2025), importar DimCliente/DimData/DimProduto/DimVendedor/FatoVendas (personificação: conta do serviço), 4 relacionamentos Fato → Dims, implantar em `localhost` | Pronta (`dd3596d`, `2ef6ecf`) |
+| 6.2 | 8 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" | Próxima |
+| 6.3 | 16 medidas + formatos, validadas contra o gabarito | — |
+| 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas | — |
+| 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) | — |
+| 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub | — |
 
 ## Validação
 - Toda carga nova é comparada com o DW SQL: contagem + `EXCEPT` nos dois sentidos (esperado 0/0) + totais financeiros.

@@ -1,0 +1,365 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1700,
+  "model": {
+    "culture": "pt-BR",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SQL/localhost;olist_financeiro",
+        "connectionDetails": {
+          "protocol": "tds",
+          "address": {
+            "server": "localhost",
+            "database": "olist_financeiro"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "credential": {
+          "AuthenticationKind": "ServiceAccount",
+          "EncryptConnection": false
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "DimCliente",
+        "columns": [
+          {
+            "name": "sk_cliente",
+            "dataType": "int64",
+            "sourceColumn": "sk_cliente"
+          },
+          {
+            "name": "customer_id",
+            "dataType": "string",
+            "sourceColumn": "customer_id"
+          },
+          {
+            "name": "customer_unique_id",
+            "dataType": "string",
+            "sourceColumn": "customer_unique_id"
+          },
+          {
+            "name": "customer_zip_code_prefix",
+            "dataType": "string",
+            "sourceColumn": "customer_zip_code_prefix"
+          },
+          {
+            "name": "customer_city",
+            "dataType": "string",
+            "sourceColumn": "customer_city"
+          },
+          {
+            "name": "customer_state",
+            "dataType": "string",
+            "sourceColumn": "customer_state"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/localhost;olist_financeiro\",",
+                "    dbo_DimCliente = Source{[Schema=\"dbo\",Item=\"DimCliente\"]}[Data]",
+                "in",
+                "    dbo_DimCliente"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimData",
+        "columns": [
+          {
+            "name": "sk_data",
+            "dataType": "int64",
+            "sourceColumn": "sk_data"
+          },
+          {
+            "name": "data_completa",
+            "dataType": "dateTime",
+            "sourceColumn": "data_completa"
+          },
+          {
+            "name": "ano",
+            "dataType": "int64",
+            "sourceColumn": "ano"
+          },
+          {
+            "name": "trimestre",
+            "dataType": "int64",
+            "sourceColumn": "trimestre"
+          },
+          {
+            "name": "mes_numero",
+            "dataType": "int64",
+            "sourceColumn": "mes_numero"
+          },
+          {
+            "name": "mes_nome",
+            "dataType": "string",
+            "sourceColumn": "mes_nome"
+          },
+          {
+            "name": "dia",
+            "dataType": "int64",
+            "sourceColumn": "dia"
+          },
+          {
+            "name": "dia_semana_num",
+            "dataType": "int64",
+            "sourceColumn": "dia_semana_num"
+          },
+          {
+            "name": "dia_semana_nome",
+            "dataType": "string",
+            "sourceColumn": "dia_semana_nome"
+          },
+          {
+            "name": "eh_fim_semana",
+            "dataType": "boolean",
+            "sourceColumn": "eh_fim_semana"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/localhost;olist_financeiro\",",
+                "    dbo_DimData = Source{[Schema=\"dbo\",Item=\"DimData\"]}[Data]",
+                "in",
+                "    dbo_DimData"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimProduto",
+        "columns": [
+          {
+            "name": "sk_produto",
+            "dataType": "int64",
+            "sourceColumn": "sk_produto"
+          },
+          {
+            "name": "product_id",
+            "dataType": "string",
+            "sourceColumn": "product_id"
+          },
+          {
+            "name": "product_category_name",
+            "dataType": "string",
+            "sourceColumn": "product_category_name"
+          },
+          {
+            "name": "product_category_name_english",
+            "dataType": "string",
+            "sourceColumn": "product_category_name_english"
+          },
+          {
+            "name": "product_weight_g",
+            "dataType": "int64",
+            "sourceColumn": "product_weight_g"
+          },
+          {
+            "name": "product_length_cm",
+            "dataType": "int64",
+            "sourceColumn": "product_length_cm"
+          },
+          {
+            "name": "product_height_cm",
+            "dataType": "int64",
+            "sourceColumn": "product_height_cm"
+          },
+          {
+            "name": "product_width_cm",
+            "dataType": "int64",
+            "sourceColumn": "product_width_cm"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/localhost;olist_financeiro\",",
+                "    dbo_DimProduto = Source{[Schema=\"dbo\",Item=\"DimProduto\"]}[Data]",
+                "in",
+                "    dbo_DimProduto"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimVendedor",
+        "columns": [
+          {
+            "name": "sk_vendedor",
+            "dataType": "int64",
+            "sourceColumn": "sk_vendedor"
+          },
+          {
+            "name": "seller_id",
+            "dataType": "string",
+            "sourceColumn": "seller_id"
+          },
+          {
+            "name": "seller_zip_code_prefix",
+            "dataType": "string",
+            "sourceColumn": "seller_zip_code_prefix"
+          },
+          {
+            "name": "seller_city",
+            "dataType": "string",
+            "sourceColumn": "seller_city"
+          },
+          {
+            "name": "seller_state",
+            "dataType": "string",
+            "sourceColumn": "seller_state"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/localhost;olist_financeiro\",",
+                "    dbo_DimVendedor = Source{[Schema=\"dbo\",Item=\"DimVendedor\"]}[Data]",
+                "in",
+                "    dbo_DimVendedor"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "FatoVendas",
+        "columns": [
+          {
+            "name": "sk_data",
+            "dataType": "int64",
+            "sourceColumn": "sk_data"
+          },
+          {
+            "name": "sk_cliente",
+            "dataType": "int64",
+            "sourceColumn": "sk_cliente"
+          },
+          {
+            "name": "sk_produto",
+            "dataType": "int64",
+            "sourceColumn": "sk_produto"
+          },
+          {
+            "name": "sk_vendedor",
+            "dataType": "int64",
+            "sourceColumn": "sk_vendedor"
+          },
+          {
+            "name": "order_id",
+            "dataType": "string",
+            "sourceColumn": "order_id"
+          },
+          {
+            "name": "order_item_id",
+            "dataType": "int64",
+            "sourceColumn": "order_item_id"
+          },
+          {
+            "name": "order_status",
+            "dataType": "string",
+            "sourceColumn": "order_status"
+          },
+          {
+            "name": "price",
+            "dataType": "double",
+            "sourceColumn": "price"
+          },
+          {
+            "name": "freight_value",
+            "dataType": "double",
+            "sourceColumn": "freight_value"
+          },
+          {
+            "name": "valor_total",
+            "dataType": "double",
+            "sourceColumn": "valor_total"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/localhost;olist_financeiro\",",
+                "    dbo_FatoVendas = Source{[Schema=\"dbo\",Item=\"FatoVendas\"]}[Data]",
+                "in",
+                "    dbo_FatoVendas"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "c4587b32-56ee-40cb-b8a0-26297ad00928",
+        "fromTable": "FatoVendas",
+        "fromColumn": "sk_cliente",
+        "toTable": "DimCliente",
+        "toColumn": "sk_cliente"
+      },
+      {
+        "name": "8d0c3460-95f5-40e6-b696-13e635629cbf",
+        "fromTable": "FatoVendas",
+        "fromColumn": "sk_data",
+        "toTable": "DimData",
+        "toColumn": "sk_data"
+      },
+      {
+        "name": "d976519e-4047-4e41-8688-42fe4591189e",
+        "fromTable": "FatoVendas",
+        "fromColumn": "sk_produto",
+        "toTable": "DimProduto",
+        "toColumn": "sk_produto"
+      },
+      {
+        "name": "02cb3892-2033-438b-a13a-4d59ab1b2775",
+        "fromTable": "FatoVendas",
+        "fromColumn": "sk_vendedor",
+        "toTable": "DimVendedor",
+        "toColumn": "sk_vendedor"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "800"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}

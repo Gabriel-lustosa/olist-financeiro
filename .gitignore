@@ -28,6 +28,7 @@ obj/
 *.dtsx.backup
 *.ispac.tmp
 .vs/
+*.bim_*.settings
 
 # === Claude Code (preferências pessoais, ficam só na máquina) ===
 CLAUDE.local.md

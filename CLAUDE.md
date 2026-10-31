@@ -47,7 +47,8 @@ O modelo do Power BI vira um banco no SSAS; `04_powerbi/medidas_dax.md` é o rot
 |---|---|---|
 | 6.1 | Projeto `olist_tabular` em `03_ssas/` (workspace integrado, compatibilidade mais alta do SQL 2025), importar DimCliente/DimData/DimProduto/DimVendedor/FatoVendas (personificação: conta do serviço), 4 relacionamentos Fato → Dims, implantar em `localhost` | Pronta (`dd3596d`, `2ef6ecf`) |
 | 6.2 | 10 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" | Pronta |
-| 6.3 | 16 medidas + formatos, validadas contra o gabarito | Próxima |
+| 6.3a | Tabela calculada `_Medidas` (`ROW( "Medidas", 0 )`, igual ao PBI) + 10 medidas base (Receita total → % Receitas One-shot) + formatos | Próxima |
+| 6.3b | 5 medidas de coorte e participação (Tamanho Coorte, Clientes Ativos Coorte, % Retenção Coorte, % da Receita, % Frete) + formatos | — |
 | 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas | — |
 | 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) | — |
 | 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub | — |

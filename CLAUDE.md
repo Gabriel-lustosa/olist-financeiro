@@ -22,6 +22,8 @@ Objetivo de negócio: diagnosticar a retenção de ~3% (ver `README.md`).
 - DTExec com `.ispac`: trocar parâmetro de projeto com `/Set '\Package.Variables[$Project::PastaDados];<valor>'`. O `/Par` só funciona com `/ISServer` (SSISDB).
 - SSAS: instância padrão Tabular em `localhost` (serviço `MSSQLServerOLAPService`). O modelo implantado processa com a conta `NT Service\MSSQLServerOLAPService` (personificação "Conta de serviço"), que precisa de login no SQL Server, senão dá "Falha de logon". Aplicado em 2026-10-28 com autorização do usuário: `CREATE LOGIN ... FROM WINDOWS` + `CREATE USER` + `db_datareader` no `olist_financeiro` (só leitura). Ao recriar o ambiente, refazer.
 - SSAS: a fonte de dados usa `EncryptConnection: false` (o SQL local tem certificado autoassinado; o VS pergunta em "Suporte a Criptografia"). Arquivo `Model.bim_<usuário>.settings` é pessoal (porta do workspace integrado) e fica no `.gitignore`.
+- SSAS: o Ctrl+S só grava o `Model.bim`; validar sempre no `localhost` depois de **Implantar** (ADOMD do SSMS 22). O workspace integrado não aceita conexão de fora. Conferir se `bin/Model.asdatabase` é mais novo que o `Model.bim`: se não for, o Implantar mandou o pacote velho. **Recompilar** dá erro `O destino "EntityClean" não existe no projeto` e deixa o VS sem compilar: fechar e reabrir o VS e usar **Compilar** + **Implantar**.
+- SSAS: com a coluna selecionada na grade, a barra de fórmulas pode apagar a expressão da coluna calculada sem aviso (aconteceu com `DimData[AnoMes]` na 6.2). Conferir `"expression"` no `Model.bim` antes de commitar.
 - Visual Studio está em português: citar menus e componentes pelo nome em PT (Origem OLE DB, Pesquisa, Coluna Derivada...).
 - CSVs: 5 são LF; `product_category_name_translation.csv` é CRLF com BOM; só `olist_sellers_dataset.csv` tem não-ASCII (UTF-8, inclui um til combinante U+0303). Contar bytes CR com `od`, não com `grep`.
 - O projeto está no OneDrive: o Visual Studio pode avisar "arquivo alterado externamente".
@@ -44,8 +46,8 @@ O modelo do Power BI vira um banco no SSAS; `04_powerbi/medidas_dax.md` é o rot
 | Aula | O quê | Status |
 |---|---|---|
 | 6.1 | Projeto `olist_tabular` em `03_ssas/` (workspace integrado, compatibilidade mais alta do SQL 2025), importar DimCliente/DimData/DimProduto/DimVendedor/FatoVendas (personificação: conta do serviço), 4 relacionamentos Fato → Dims, implantar em `localhost` | Pronta (`dd3596d`, `2ef6ecf`) |
-| 6.2 | 8 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" | Próxima |
-| 6.3 | 16 medidas + formatos, validadas contra o gabarito | — |
+| 6.2 | 10 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" | Pronta |
+| 6.3 | 16 medidas + formatos, validadas contra o gabarito | Próxima |
 | 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas | — |
 | 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) | — |
 | 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub | — |

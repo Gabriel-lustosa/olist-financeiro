@@ -55,6 +55,66 @@
             "name": "customer_state",
             "dataType": "string",
             "sourceColumn": "customer_state"
+          },
+          {
+            "type": "calculated",
+            "name": "Qtd Pedidos Entregues",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "CALCULATE( DISTINCTCOUNT( FatoVendas[order_id] ), ALLEXCEPT( DimCliente, DimCliente[customer_unique_id] ), FatoVendas[order_status] = \"delivered\" )"
+          },
+          {
+            "type": "calculated",
+            "name": "Tipo Cliente",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF( DimCliente[Qtd Pedidos Entregues] > 1, \"Recorrente\", \"Único\" )"
+          },
+          {
+            "type": "calculated",
+            "name": "AnoMes Aquisicao Numero",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": [
+              "VAR DataPrimeiraCompra = CALCULATE( MINX( FatoVendas, RELATED( DimData[data_completa] ) ), ALLEXCEPT( DimCliente, DimCliente[customer_unique_id] ), FatoVendas[order_status] = \"delivered\" )",
+              "RETURN IF( ISBLANK( DataPrimeiraCompra ), BLANK(), YEAR( DataPrimeiraCompra ) * 100 + MONTH( DataPrimeiraCompra ) )"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "AnoMes Aquisicao",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "VAR N = DimCliente[AnoMes Aquisicao Numero]",
+              "RETURN IF( ISBLANK( N ), BLANK(), FORMAT( DATE( INT( N / 100 ), MOD( N, 100 ), 1 ), \"YYYY-MM\" ) )"
+            ],
+            "sortByColumn": "AnoMes Aquisicao Numero"
+          },
+          {
+            "type": "calculated",
+            "name": "Aquisicao Mes Indice",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": [
+              "VAR N = DimCliente[AnoMes Aquisicao Numero]",
+              "RETURN IF( ISBLANK( N ), BLANK(), INT( N / 100 ) * 12 + MOD( N, 100 ) )"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "Regiao",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "SWITCH( TRUE(),",
+              "    DimCliente[customer_state] IN { \"SP\", \"RJ\", \"MG\", \"ES\" }, \"Sudeste\",",
+              "    DimCliente[customer_state] IN { \"PR\", \"SC\", \"RS\" }, \"Sul\",",
+              "    DimCliente[customer_state] IN { \"DF\", \"GO\", \"MT\", \"MS\" }, \"Centro-Oeste\",",
+              "    DimCliente[customer_state] IN { \"AC\", \"AP\", \"AM\", \"PA\", \"RO\", \"RR\", \"TO\" }, \"Norte\",",
+              "    DimCliente[customer_state] IN { \"AL\", \"BA\", \"CE\", \"MA\", \"PB\", \"PE\", \"PI\", \"RN\", \"SE\" }, \"Nordeste\",",
+              "    \"?\" )"
+            ]
           }
         ],
         "partitions": [
@@ -126,6 +186,28 @@
             "name": "eh_fim_semana",
             "dataType": "boolean",
             "sourceColumn": "eh_fim_semana"
+          },
+          {
+            "type": "calculated",
+            "name": "AnoMes",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "FORMAT( DimData[data_completa], \"YYYY-MM\" )",
+            "sortByColumn": "AnoMes Numero"
+          },
+          {
+            "type": "calculated",
+            "name": "AnoMes Numero",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "YEAR( DimData[data_completa] ) * 100 + MONTH( DimData[data_completa] )"
+          },
+          {
+            "type": "calculated",
+            "name": "Mes Indice",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "YEAR( DimData[data_completa] ) * 12 + MONTH( DimData[data_completa] )"
           }
         ],
         "partitions": [
@@ -187,6 +269,16 @@
             "name": "product_width_cm",
             "dataType": "int64",
             "sourceColumn": "product_width_cm"
+          },
+          {
+            "type": "calculated",
+            "name": "Categoria",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "VAR C = DimProduto[product_category_name]",
+              "RETURN IF( ISBLANK( C ) || C = \"\", \"sem categoria\", SUBSTITUTE( C, \"_\", \" \" ) )"
+            ]
           }
         ],
         "partitions": [
@@ -319,6 +411,28 @@
                 "in",
                 "    dbo_FatoVendas"
               ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Meses Relativos",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "Mes Relativo",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Mes Relativo]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "SELECTCOLUMNS( GENERATESERIES( 0, 20, 1 ), \"Mes Relativo\", [Value] )"
             }
           }
         ]

@@ -539,6 +539,31 @@
             "name": "% Receitas One-shot",
             "expression": "DIVIDE( [Receita One-shot], [Receita Realizada] )",
             "formatString": "0.0%;-0.0%;0.0%"
+          },
+          {
+            "name": "Tamanho Coorte",
+            "expression": "CALCULATE( [Clientes Únicos], REMOVEFILTERS( DimData ) )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Clientes Ativos Coorte",
+            "expression": "VAR K = SELECTEDVALUE( 'Meses Relativos'[Mes Relativo] ) RETURN IF( NOT ISBLANK( K ), SUMX( VALUES( DimCliente[Aquisicao Mes Indice] ), VAR Coorte = DimCliente[Aquisicao Mes Indice] RETURN CALCULATE( [Clientes Únicos], DimData[Mes Indice] = Coorte + K ) ) )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "% Retenção Coorte",
+            "expression": "DIVIDE( [Clientes Ativos Coorte], [Tamanho Coorte] )",
+            "formatString": "0.00%;-0.00%;0.00%"
+          },
+          {
+            "name": "% da Receita",
+            "expression": "DIVIDE( [Receita Realizada], CALCULATE( [Receita Realizada], REMOVEFILTERS( DimProduto ), REMOVEFILTERS( DimCliente ) ) )",
+            "formatString": "0.0%;-0.0%;0.0%"
+          },
+          {
+            "name": "% Frete",
+            "expression": "DIVIDE( CALCULATE( SUM( FatoVendas[freight_value] ), FatoVendas[order_status] = \"delivered\" ), [Receita Realizada] )",
+            "formatString": "0.0%;-0.0%;0.0%"
           }
         ]
       }

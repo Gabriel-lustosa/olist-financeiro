@@ -436,6 +436,111 @@
             }
           }
         ]
+      },
+      {
+        "name": "_Medidas",
+        "isHidden": true,
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "Medidas",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Medidas]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "ROW( \"Medidas\", 0 )"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Receita total",
+            "expression": "SUM( FatoVendas[valor_total] )",
+            "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1046\" DisplayName=\"R$ Português (Brasil)\" Symbol=\"R$\" PositivePattern=\"2\" NegativePattern=\"9\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Receita Realizada",
+            "expression": "CALCULATE( [Receita total], FatoVendas[order_status] = \"delivered\" )",
+            "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1046\" DisplayName=\"R$ Português (Brasil)\" Symbol=\"R$\" PositivePattern=\"2\" NegativePattern=\"9\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total de Pedidos",
+            "expression": "CALCULATE( DISTINCTCOUNT( FatoVendas[order_id] ), FatoVendas[order_status] = \"delivered\" )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Ticket Médio",
+            "expression": "DIVIDE( [Receita Realizada], [Total de Pedidos] )",
+            "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1046\" DisplayName=\"R$ Português (Brasil)\" Symbol=\"R$\" PositivePattern=\"2\" NegativePattern=\"9\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Clientes Únicos",
+            "expression": "COUNTROWS( SUMMARIZE( CALCULATETABLE( FatoVendas, FatoVendas[order_status] = \"delivered\" ), DimCliente[customer_unique_id] ) )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Clientes Recorrentes",
+            "expression": "COUNTROWS( FILTER( ADDCOLUMNS( SUMMARIZE( CALCULATETABLE( FatoVendas, FatoVendas[order_status] = \"delivered\" ), DimCliente[customer_unique_id] ), \"QtdPedidos\", CALCULATE( DISTINCTCOUNT( FatoVendas[order_id] ), FatoVendas[order_status] = \"delivered\" ) ), [QtdPedidos] > 1 ) )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Taxa de Retenção",
+            "expression": "DIVIDE( [Clientes Recorrentes], [Clientes Únicos] )",
+            "formatString": "0.0%;-0.0%;0.0%"
+          },
+          {
+            "name": "Receita One-shot",
+            "expression": "CALCULATE( [Receita Realizada], DimCliente[Tipo Cliente] = \"Único\" )",
+            "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1046\" DisplayName=\"R$ Português (Brasil)\" Symbol=\"R$\" PositivePattern=\"2\" NegativePattern=\"9\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Receitas Recorrentes",
+            "expression": "CALCULATE( [Receita Realizada], DimCliente[Tipo Cliente] = \"Recorrente\" )",
+            "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1046\" DisplayName=\"R$ Português (Brasil)\" Symbol=\"R$\" PositivePattern=\"2\" NegativePattern=\"9\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "% Receitas One-shot",
+            "expression": "DIVIDE( [Receita One-shot], [Receita Realizada] )",
+            "formatString": "0.0%;-0.0%;0.0%"
+          }
+        ]
       }
     ],
     "relationships": [

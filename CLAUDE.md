@@ -24,6 +24,7 @@ Objetivo de negócio: diagnosticar a retenção de ~3% (ver `README.md`).
 - SSAS: a fonte de dados usa `EncryptConnection: false` (o SQL local tem certificado autoassinado; o VS pergunta em "Suporte a Criptografia"). Arquivo `Model.bim_<usuário>.settings` é pessoal (porta do workspace integrado) e fica no `.gitignore`.
 - SSAS: o Ctrl+S só grava o `Model.bim`; validar sempre no `localhost` depois de **Implantar** (ADOMD do SSMS 22). O workspace integrado não aceita conexão de fora. Conferir se `bin/Model.asdatabase` é mais novo que o `Model.bim`: se não for, o Implantar mandou o pacote velho. **Recompilar** dá erro `O destino "EntityClean" não existe no projeto` e deixa o VS sem compilar: fechar e reabrir o VS e usar **Compilar** + **Implantar**.
 - SSAS: com a coluna selecionada na grade, a barra de fórmulas pode apagar a expressão da coluna calculada sem aviso (aconteceu com `DimData[AnoMes]` na 6.2). Conferir `"expression"` no `Model.bim` antes de commitar.
+- SSAS: fórmula `Nome:=...` digitada com a grade de **dados** selecionada vira coluna calculada, não medida (aconteceu nas 10 medidas da 6.3a). Medida é na grade de **medidas** (parte de baixo). Conferir no `Model.bim` se ela está em `"measures"` e não em `"columns"`.
 - Visual Studio está em português: citar menus e componentes pelo nome em PT (Origem OLE DB, Pesquisa, Coluna Derivada...).
 - CSVs: 5 são LF; `product_category_name_translation.csv` é CRLF com BOM; só `olist_sellers_dataset.csv` tem não-ASCII (UTF-8, inclui um til combinante U+0303). Contar bytes CR com `od`, não com `grep`.
 - O projeto está no OneDrive: o Visual Studio pode avisar "arquivo alterado externamente".
@@ -47,8 +48,8 @@ O modelo do Power BI vira um banco no SSAS; `04_powerbi/medidas_dax.md` é o rot
 |---|---|---|
 | 6.1 | Projeto `olist_tabular` em `03_ssas/` (workspace integrado, compatibilidade mais alta do SQL 2025), importar DimCliente/DimData/DimProduto/DimVendedor/FatoVendas (personificação: conta do serviço), 4 relacionamentos Fato → Dims, implantar em `localhost` | Pronta (`dd3596d`, `2ef6ecf`) |
 | 6.2 | 10 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" | Pronta |
-| 6.3a | Tabela calculada `_Medidas` (`ROW( "Medidas", 0 )`, igual ao PBI) + 10 medidas base (Receita total → % Receitas One-shot) + formatos | Próxima |
-| 6.3b | 5 medidas de coorte e participação (Tamanho Coorte, Clientes Ativos Coorte, % Retenção Coorte, % da Receita, % Frete) + formatos | — |
+| 6.3a | Tabela calculada `_Medidas` (`ROW( "Medidas", 0 )`, igual ao PBI) + 10 medidas base (Receita total → % Receitas One-shot) + formatos | Pronta (`53c4907`) |
+| 6.3b | 5 medidas de coorte e participação (Tamanho Coorte, Clientes Ativos Coorte, % Retenção Coorte, % da Receita, % Frete) + formatos | Próxima |
 | 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas | — |
 | 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) | — |
 | 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub | — |

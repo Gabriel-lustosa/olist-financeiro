@@ -26,6 +26,7 @@ Objetivo de negócio: diagnosticar a retenção de ~3% (ver `README.md`).
 - SSAS: com a coluna selecionada na grade, a barra de fórmulas pode apagar a expressão da coluna calculada sem aviso (aconteceu com `DimData[AnoMes]` na 6.2). Conferir `"expression"` no `Model.bim` antes de commitar.
 - SSAS: fórmula `Nome:=...` digitada com a grade de **dados** selecionada vira coluna calculada, não medida (aconteceu nas 10 medidas da 6.3a). Medida é na grade de **medidas** (parte de baixo). Conferir no `Model.bim` se ela está em `"measures"` e não em `"columns"`.
 - SSAS: medidas `(em branco)` na grade do VS com o `localhost` certo = workspace integrado sem dados (aconteceu ao reabrir o VS na 6.3a). Resolver com **Extensões → Modelo → Processar → Processar Tudo**; não muda o `Model.bim` nem o `localhost`.
+- SSAS: na exibição de diagrama, renomear o **nível** da hierarquia (item recuado sob ela), não a coluna da lista de cima (na 6.4 as colunas `ano`/`mes_nome`... viraram `Ano`/`Mês`). Ao devolver o nome da coluna, o VS refaz o nível (`Mes_nome`): conferir os níveis no `Model.bim` depois.
 - Visual Studio está em português: citar menus e componentes pelo nome em PT (Origem OLE DB, Pesquisa, Coluna Derivada...).
 - CSVs: 5 são LF; `product_category_name_translation.csv` é CRLF com BOM; só `olist_sellers_dataset.csv` tem não-ASCII (UTF-8, inclui um til combinante U+0303). Contar bytes CR com `od`, não com `grep`.
 - O projeto está no OneDrive: o Visual Studio pode avisar "arquivo alterado externamente".
@@ -51,8 +52,8 @@ O modelo do Power BI vira um banco no SSAS; `04_powerbi/medidas_dax.md` é o rot
 | 6.2 | 10 colunas calculadas + tabela `Meses Relativos` + "Classificar por coluna" | Pronta |
 | 6.3a | Tabela calculada `_Medidas` (`ROW( "Medidas", 0 )`, igual ao PBI) + 10 medidas base (Receita total → % Receitas One-shot) + formatos | Pronta (`53c4907`) |
 | 6.3b | 5 medidas de coorte e participação (Tamanho Coorte, Clientes Ativos Coorte, % Retenção Coorte, % da Receita, % Frete) + formatos | Pronta (`1ed2e03`) |
-| 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas | Próxima |
-| 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) | — |
+| 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas | Pronta (`29486ba`) |
+| 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) | Próxima |
 | 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub | — |
 
 ## Validação

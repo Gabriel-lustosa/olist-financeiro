@@ -29,11 +29,13 @@
           {
             "name": "sk_cliente",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_cliente"
           },
           {
             "name": "customer_id",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "customer_id"
           },
           {
@@ -75,6 +77,7 @@
             "name": "AnoMes Aquisicao Numero",
             "dataType": "int64",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": [
               "VAR DataPrimeiraCompra = CALCULATE( MINX( FatoVendas, RELATED( DimData[data_completa] ) ), ALLEXCEPT( DimCliente, DimCliente[customer_unique_id] ), FatoVendas[order_status] = \"delivered\" )",
               "RETURN IF( ISBLANK( DataPrimeiraCompra ), BLANK(), YEAR( DataPrimeiraCompra ) * 100 + MONTH( DataPrimeiraCompra ) )"
@@ -96,6 +99,7 @@
             "name": "Aquisicao Mes Indice",
             "dataType": "int64",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": [
               "VAR N = DimCliente[AnoMes Aquisicao Numero]",
               "RETURN IF( ISBLANK( N ), BLANK(), INT( N / 100 ) * 12 + MOD( N, 100 ) )"
@@ -136,15 +140,18 @@
       },
       {
         "name": "DimData",
+        "dataCategory": "Time",
         "columns": [
           {
             "name": "sk_data",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_data"
           },
           {
             "name": "data_completa",
             "dataType": "dateTime",
+            "isKey": true,
             "sourceColumn": "data_completa"
           },
           {
@@ -160,12 +167,14 @@
           {
             "name": "mes_numero",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "mes_numero"
           },
           {
             "name": "mes_nome",
             "dataType": "string",
-            "sourceColumn": "mes_nome"
+            "sourceColumn": "mes_nome",
+            "sortByColumn": "mes_numero"
           },
           {
             "name": "dia",
@@ -175,12 +184,14 @@
           {
             "name": "dia_semana_num",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "dia_semana_num"
           },
           {
             "name": "dia_semana_nome",
             "dataType": "string",
-            "sourceColumn": "dia_semana_nome"
+            "sourceColumn": "dia_semana_nome",
+            "sortByColumn": "dia_semana_num"
           },
           {
             "name": "eh_fim_semana",
@@ -200,6 +211,7 @@
             "name": "AnoMes Numero",
             "dataType": "int64",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": "YEAR( DimData[data_completa] ) * 100 + MONTH( DimData[data_completa] )"
           },
           {
@@ -207,6 +219,7 @@
             "name": "Mes Indice",
             "dataType": "int64",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": "YEAR( DimData[data_completa] ) * 12 + MONTH( DimData[data_completa] )"
           }
         ],
@@ -225,6 +238,33 @@
               ]
             }
           }
+        ],
+        "hierarchies": [
+          {
+            "name": "Calendário",
+            "levels": [
+              {
+                "name": "Ano",
+                "ordinal": 0,
+                "column": "ano"
+              },
+              {
+                "name": "Trimestre",
+                "ordinal": 1,
+                "column": "trimestre"
+              },
+              {
+                "name": "Mês",
+                "ordinal": 2,
+                "column": "mes_nome"
+              },
+              {
+                "name": "Dia",
+                "ordinal": 3,
+                "column": "dia"
+              }
+            ]
+          }
         ]
       },
       {
@@ -233,6 +273,7 @@
           {
             "name": "sk_produto",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_produto"
           },
           {
@@ -243,6 +284,7 @@
           {
             "name": "product_category_name",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "product_category_name"
           },
           {
@@ -304,6 +346,7 @@
           {
             "name": "sk_vendedor",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_vendedor"
           },
           {
@@ -350,51 +393,61 @@
           {
             "name": "sk_data",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_data"
           },
           {
             "name": "sk_cliente",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_cliente"
           },
           {
             "name": "sk_produto",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_produto"
           },
           {
             "name": "sk_vendedor",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "sk_vendedor"
           },
           {
             "name": "order_id",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "order_id"
           },
           {
             "name": "order_item_id",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "order_item_id"
           },
           {
             "name": "order_status",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "order_status"
           },
           {
             "name": "price",
             "dataType": "double",
+            "isHidden": true,
             "sourceColumn": "price"
           },
           {
             "name": "freight_value",
             "dataType": "double",
+            "isHidden": true,
             "sourceColumn": "freight_value"
           },
           {
             "name": "valor_total",
             "dataType": "double",
+            "isHidden": true,
             "sourceColumn": "valor_total"
           }
         ],
@@ -439,7 +492,6 @@
       },
       {
         "name": "_Medidas",
-        "isHidden": true,
         "columns": [
           {
             "type": "calculatedTableColumn",
@@ -447,6 +499,7 @@
             "dataType": "int64",
             "isNameInferred": true,
             "isDataTypeInferred": true,
+            "isHidden": true,
             "sourceColumn": "[Medidas]"
           }
         ],
@@ -464,6 +517,7 @@
             "name": "Receita total",
             "expression": "SUM( FatoVendas[valor_total] )",
             "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "displayFolder": "Vendas",
             "annotations": [
               {
                 "name": "Format",
@@ -475,6 +529,7 @@
             "name": "Receita Realizada",
             "expression": "CALCULATE( [Receita total], FatoVendas[order_status] = \"delivered\" )",
             "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "displayFolder": "Vendas",
             "annotations": [
               {
                 "name": "Format",
@@ -485,12 +540,14 @@
           {
             "name": "Total de Pedidos",
             "expression": "CALCULATE( DISTINCTCOUNT( FatoVendas[order_id] ), FatoVendas[order_status] = \"delivered\" )",
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Vendas"
           },
           {
             "name": "Ticket Médio",
             "expression": "DIVIDE( [Receita Realizada], [Total de Pedidos] )",
             "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "displayFolder": "Vendas",
             "annotations": [
               {
                 "name": "Format",
@@ -501,22 +558,26 @@
           {
             "name": "Clientes Únicos",
             "expression": "COUNTROWS( SUMMARIZE( CALCULATETABLE( FatoVendas, FatoVendas[order_status] = \"delivered\" ), DimCliente[customer_unique_id] ) )",
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Clientes"
           },
           {
             "name": "Clientes Recorrentes",
             "expression": "COUNTROWS( FILTER( ADDCOLUMNS( SUMMARIZE( CALCULATETABLE( FatoVendas, FatoVendas[order_status] = \"delivered\" ), DimCliente[customer_unique_id] ), \"QtdPedidos\", CALCULATE( DISTINCTCOUNT( FatoVendas[order_id] ), FatoVendas[order_status] = \"delivered\" ) ), [QtdPedidos] > 1 ) )",
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Clientes"
           },
           {
             "name": "Taxa de Retenção",
             "expression": "DIVIDE( [Clientes Recorrentes], [Clientes Únicos] )",
-            "formatString": "0.0%;-0.0%;0.0%"
+            "formatString": "0.0%;-0.0%;0.0%",
+            "displayFolder": "Clientes"
           },
           {
             "name": "Receita One-shot",
             "expression": "CALCULATE( [Receita Realizada], DimCliente[Tipo Cliente] = \"Único\" )",
             "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "displayFolder": "Tipo de Cliente",
             "annotations": [
               {
                 "name": "Format",
@@ -528,6 +589,7 @@
             "name": "Receitas Recorrentes",
             "expression": "CALCULATE( [Receita Realizada], DimCliente[Tipo Cliente] = \"Recorrente\" )",
             "formatString": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00",
+            "displayFolder": "Tipo de Cliente",
             "annotations": [
               {
                 "name": "Format",
@@ -538,32 +600,38 @@
           {
             "name": "% Receitas One-shot",
             "expression": "DIVIDE( [Receita One-shot], [Receita Realizada] )",
-            "formatString": "0.0%;-0.0%;0.0%"
+            "formatString": "0.0%;-0.0%;0.0%",
+            "displayFolder": "Tipo de Cliente"
           },
           {
             "name": "Tamanho Coorte",
             "expression": "CALCULATE( [Clientes Únicos], REMOVEFILTERS( DimData ) )",
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Coorte"
           },
           {
             "name": "Clientes Ativos Coorte",
             "expression": "VAR K = SELECTEDVALUE( 'Meses Relativos'[Mes Relativo] ) RETURN IF( NOT ISBLANK( K ), SUMX( VALUES( DimCliente[Aquisicao Mes Indice] ), VAR Coorte = DimCliente[Aquisicao Mes Indice] RETURN CALCULATE( [Clientes Únicos], DimData[Mes Indice] = Coorte + K ) ) )",
-            "formatString": "#,0"
+            "formatString": "#,0",
+            "displayFolder": "Coorte"
           },
           {
             "name": "% Retenção Coorte",
             "expression": "DIVIDE( [Clientes Ativos Coorte], [Tamanho Coorte] )",
-            "formatString": "0.00%;-0.00%;0.00%"
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Coorte"
           },
           {
             "name": "% da Receita",
             "expression": "DIVIDE( [Receita Realizada], CALCULATE( [Receita Realizada], REMOVEFILTERS( DimProduto ), REMOVEFILTERS( DimCliente ) ) )",
-            "formatString": "0.0%;-0.0%;0.0%"
+            "formatString": "0.0%;-0.0%;0.0%",
+            "displayFolder": "Participação"
           },
           {
             "name": "% Frete",
             "expression": "DIVIDE( CALCULATE( SUM( FatoVendas[freight_value] ), FatoVendas[order_status] = \"delivered\" ), [Receita Realizada] )",
-            "formatString": "0.0%;-0.0%;0.0%"
+            "formatString": "0.0%;-0.0%;0.0%",
+            "displayFolder": "Participação"
           }
         ]
       }

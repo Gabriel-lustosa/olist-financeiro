@@ -53,8 +53,8 @@ O modelo do Power BI vira um banco no SSAS; `04_powerbi/medidas_dax.md` é o rot
 | 6.3a | Tabela calculada `_Medidas` (`ROW( "Medidas", 0 )`, igual ao PBI) + 10 medidas base (Receita total → % Receitas One-shot) + formatos | Pronta (`53c4907`) |
 | 6.3b | 5 medidas de coorte e participação (Tamanho Coorte, Clientes Ativos Coorte, % Retenção Coorte, % da Receita, % Frete) + formatos | Pronta (`1ed2e03`) |
 | 6.4 | Acabamento: ocultar SKs/colunas técnicas, hierarquia de datas, pastas de medidas | Pronta (`29486ba`) |
-| 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio) | Próxima |
-| 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub | — |
+| 6.5 | Conectar um relatório ao SSAS (provar o modelo fora do Visual Studio): `03_ssas/olist_tabular_live.pbix` em Conexão dinâmica + prints em `03_ssas/img/` | Pronta (`19acea8`) |
+| 6.6 | README + tópicos `ssas` e `ssas-tabular` no About do GitHub | Próxima |
 
 ## Validação
 - Toda carga nova é comparada com o DW SQL: contagem + `EXCEPT` nos dois sentidos (esperado 0/0) + totais financeiros.

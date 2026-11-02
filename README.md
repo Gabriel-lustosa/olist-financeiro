@@ -1,9 +1,11 @@
 # Projeto Olist — Análise Financeira
 
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=flat&logo=microsoftsqlserver&logoColor=white)
+![SSIS](https://img.shields.io/badge/SSIS-CC2927?style=flat)
+![SSAS Tabular](https://img.shields.io/badge/SSAS%20Tabular-CC2927?style=flat)
 ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=flat&logo=powerbi&logoColor=black)
 ![DAX](https://img.shields.io/badge/DAX-0078D4?style=flat)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-orange?style=flat)
+![Status](https://img.shields.io/badge/status-conclu%C3%ADdo-brightgreen?style=flat)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriel%20Lustosa-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gabriellustosa1/)
 
 Projeto de portfólio em **Business Intelligence** usando o dataset público **Olist** (e-commerce brasileiro, 2016–2018) para investigar performance financeira e retenção de clientes.
@@ -52,7 +54,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 |---|---|---|---|
 | Data Warehouse | **SQL Server** | Star schema; carga dos CSVs via `BULK INSERT` | Pronto |
 | ETL | **SSIS** | Pipeline orquestrado (staging → dimensões → fato) que reproduz a carga SQL, com tratamento de órfãos e execução por linha de comando | Pronto |
-| Modelo semântico | **SSAS Tabular** | Migrar medidas DAX e hierarquias do Power BI para um modelo centralizado | Planejado |
+| Modelo semântico | **SSAS Tabular** | O modelo do Power BI (relacionamentos, colunas calculadas e as 15 medidas DAX) centralizado num servidor, consumido por relatórios em conexão ao vivo | Pronto |
 | Visualização | **Power BI** | Modelo estrela, medidas DAX e dashboard final | Pronto |
 
 ---
@@ -92,6 +94,7 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 - Power BI Desktop (versão de outubro/2024 ou mais recente)
 - Baixar os 9 CSVs do [Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) e colocar em `dados/`
 - Para o SSIS: SQL Server 2025 com o recurso **Integration Services** + Visual Studio 2022+ com a extensão *SQL Server Integration Services Projects*
+- Para o SSAS: SQL Server 2025 com o recurso **Analysis Services** no modo Tabular + Visual Studio 2022+ com a extensão *Microsoft Analysis Services Projects*
 
 ### Ordem dos scripts (`01_sql/`)
 ```sql
@@ -144,6 +147,31 @@ O projeto `olist_etl` refaz a mesma carga em pacotes SSIS, num banco separado (`
 ### Power BI
 Abrir `04_powerbi/olist_financeiro.pbix` e apontar a fonte de dados para a instância local do SQL Server (banco `olist_financeiro`). Todas as medidas estão documentadas em [`medidas_dax.md`](04_powerbi/medidas_dax.md).
 
+### Modelo SSAS Tabular (`03_ssas/`)
+O projeto `olist_tabular` leva o modelo do Power BI para um servidor Analysis Services. Assim as regras de negócio (relacionamentos, colunas calculadas e medidas DAX) ficam num lugar só, e qualquer relatório consome o mesmo modelo sem copiar dados.
+
+1. Dar ao serviço do SSAS acesso de leitura ao DW. O modelo processa com a conta do serviço (personificação "Conta de serviço"); sem isso o processamento falha com "Falha de logon":
+
+```sql
+CREATE LOGIN [NT Service\MSSQLServerOLAPService] FROM WINDOWS;
+USE olist_financeiro;
+CREATE USER [NT Service\MSSQLServerOLAPService] FOR LOGIN [NT Service\MSSQLServerOLAPService];
+ALTER ROLE db_datareader ADD MEMBER [NT Service\MSSQLServerOLAPService];
+```
+
+2. Abrir `03_ssas/olist_tabular/olist_tabular.slnx` no Visual Studio, **Compilar** e **Implantar** (servidor de destino `localhost`). Isso cria e processa o banco `olist_tabular` no SSAS.
+3. Abrir `03_ssas/olist_tabular_live.pbix`. Ele está em **Conexão dinâmica** com `localhost` / `olist_tabular`: não guarda dados (tem 14 KB) e cada visual consulta o SSAS na hora.
+
+| Item do modelo | Conteúdo |
+|---|---|
+| Tabelas | As 5 do star schema (importadas do DW, só leitura) + `Meses Relativos` (eixo da coorte) + `_Medidas` (tabela calculada que guarda as medidas) |
+| Relacionamentos | 4, FatoVendas → dimensões |
+| Colunas calculadas | 10 (pedidos entregues e tipo de cliente, mês de aquisição da coorte, região, categoria, ano-mês e índices de mês) |
+| Medidas | 15, em 5 pastas: Vendas, Clientes, Tipo de Cliente, Coorte, Participação |
+| Acabamento | 23 colunas técnicas ocultas (SKs, `customer_id`, ordenadores; a FatoVendas fica inteira oculta), `DimData` marcada como tabela de datas, hierarquia `Calendário` (Ano > Trimestre > Mês > Dia), meses e dias da semana ordenados pelo número |
+
+**Validação SSAS × SQL:** contagens, receita total e realizada, as 15 medidas e a matriz de coorte (219 de 219 células) conferidas contra o gabarito `05_analise_recorrencia.sql`, consultando o servidor via ADOMD.
+
 ---
 
 ## Estrutura do repositório
@@ -152,7 +180,7 @@ Abrir `04_powerbi/olist_financeiro.pbix` e apontar a fonte de dados para a inst�
 olist-financeiro/
 ├── 01_sql/          Scripts de criação, carga e análise (SQL Server)
 ├── 02_ssis/         Projeto SSIS olist_etl (4 pacotes) + script do banco de teste
-├── 03_ssas/         Modelo tabular (planejado)
+├── 03_ssas/         Projeto SSAS Tabular olist_tabular + relatório em conexão ao vivo + img/ (prints)
 ├── 04_powerbi/      Relatório .pbix + medidas_dax.md (DAX documentado) + img/ (prints)
 ├── dados/           CSVs Olist (não versionado — baixar do Kaggle)
 └── README.md
@@ -166,6 +194,7 @@ olist-financeiro/
 - **SQL avançado**: BULK INSERT com `CODEPAGE 65001` (UTF-8), lookup de SKs via INNER JOIN, CTE recursiva, validações `COUNT(*)`/`SUM()` origem vs. destino, análise de coorte de aquisição
 - **DAX**: colunas calculadas com transição de contexto + `ALLEXCEPT` por `customer_unique_id`, `MINX` + `RELATED` contra relacionamento de direção única, tabelas virtuais com `SUMMARIZE`/`ADDCOLUMNS`, divisão segura com `DIVIDE` ([ver todo o DAX](04_powerbi/medidas_dax.md))
 - **ETL com SSIS**: Origem de Arquivo Simples com tratamento de encoding (UTF-8 → 1252, remoção de diacrítico combinante), Pesquisa (lookup) para trocar NK por SK, órfãos desviados para saída sem correspondência + Contagem de Linhas + restrição de precedência com expressão, pacote master com Executar Pacote e execução via DTExec com código de saída
+- **Modelo semântico com SSAS Tabular**: modelo do Power BI migrado para servidor (fonte com personificação da conta de serviço, relacionamentos, colunas e tabelas calculadas, 15 medidas com formato e pastas de exibição), acabamento para o usuário final (colunas técnicas ocultas, tabela de datas, hierarquia, Classificar por Coluna), implantação no `localhost` e relatório Power BI em conexão ao vivo
 - **Análise de retenção**: classificação one-shot vs. recorrente e decomposição da receita por tipo de cliente
 - **Documentação**: scripts com cabeçalho, convenções explícitas, comentários sobre pegadinhas do dataset (`customer_id` vs. `customer_unique_id`)
 
@@ -188,6 +217,15 @@ Top 15 categorias com participação na receita e % one-shot; taxa de retenção
 
 ![Categorias e Regiões](04_powerbi/img/categorias_regioes.png)
 
+### 4. Relatório no SSAS (conexão ao vivo)
+Relatório novo ligado ao modelo `olist_tabular` no Analysis Services, sem nenhum dado importado. Os números são os mesmos do dashboard principal: as regras moram no servidor, não no `.pbix`.
+
+![Cartões no SSAS](03_ssas/img/relatorio_ssas_cartoes.png)
+
+![Matriz de coorte no SSAS](03_ssas/img/relatorio_ssas_coorte.png)
+
+![Hierarquia Calendário no SSAS](03_ssas/img/relatorio_ssas_hierarquia.png)
+
 ---
 
 ## Status
@@ -203,7 +241,8 @@ Top 15 categorias com participação na receita e % one-shot; taxa de retenção
 | Dashboard Power BI: Categorias e Regiões | Pronto |
 | Screenshots do dashboard no README | Pronto |
 | Pacotes SSIS | Pronto (4 pacotes, validados contra o DW SQL) |
-| Modelo SSAS Tabular | Planejado |
+| Modelo SSAS Tabular | Pronto (implantado no `localhost`, validado contra o DW SQL) |
+| Relatório em conexão ao vivo com o SSAS | Pronto |
 
 ---
 

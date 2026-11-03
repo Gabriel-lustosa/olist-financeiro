@@ -20,6 +20,7 @@ Projeto de portfólio em **Business Intelligence** usando o dataset público **O
 
 - [Objetivo de negócio](#objetivo-de-negócio)
 - [Insights-chave](#insights-chave)
+- [Recomendações](#recomendações)
 - [Stack técnica](#stack-técnica)
 - [Modelo dimensional (star schema)](#modelo-dimensional-star-schema)
 - [Como rodar](#como-rodar)
@@ -45,6 +46,21 @@ Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identific
 | 2 | **Nenhuma coorte com 700+ clientes passa de 0,72% de recompra em mês algum**; no mês seguinte à 1ª compra, só 0,48% volta | Matriz de coorte (mês de aquisição × meses depois) com tabela desconectada + `SUMX` por coorte; validada célula a célula contra o SQL (219/219) | Concluído |
 | 3 | **O problema é do negócio, não da categoria:** todas as categorias com R$ 100 mil+ têm de 88,8% a 98,1% da receita em clientes one-shot | `[% Receitas One-shot]` fatiado por categoria; participação com `REMOVEFILTERS` | Concluído |
 | 4 | **Nordeste retém menos (2,3% vs. 3,1% no Sudeste), mas tem ticket 34% maior** (R$ 201,52 vs. R$ 150,48), com o frete pesando 17,9% da receita (13,2% no Sudeste) | Coluna `Regiao` (`SWITCH(TRUE())`) + `[Taxa de Retenção]`, `[Ticket Médio]` e `[% Frete]` por região | Concluído |
+
+---
+
+## Recomendações
+
+O diagnóstico mostra que o Olist sabe adquirir clientes, mas não sabe trazê-los de volta. As ações abaixo saem direto dos insights.
+
+| # | Recomendação | Por quê (insight) | Como medir |
+|---|---|---|---|
+| 1 | **Criar uma jornada da 2ª compra no 1º mês:** e-mail ou push de pós-entrega e um cupom com validade curta para a próxima compra | Só 0,48% volta no mês seguinte à 1ª compra, e nenhuma coorte grande passa de 0,72%. A janela logo depois da 1ª compra é onde o cliente se perde (insight 2). | Matriz de coorte: retenção no mês 1 das coortes novas, com meta de sair de 0,48% para 1% |
+| 2 | **Tratar a retenção como programa da plataforma, e não por categoria:** benefício que vale em qualquer categoria, como cashback ou pontos | Todas as categorias relevantes têm de 88,8% a 98,1% da receita em one-shot. Campanha por categoria atacaria o sintoma, não a causa (insight 3). | `[% Receitas One-shot]` caindo em todas as categorias, não só em uma |
+| 3 | **Piloto de frete reduzido na 2ª compra para o Nordeste** | O Nordeste retém menos (2,3% contra 3,1%), mas tem ticket 34% maior, e o frete pesa 17,9% da receita. O frete é a barreira mais visível, e cada cliente recuperado ali vale mais (insight 4). | `[Taxa de Retenção]` e `[% Frete]` do Nordeste antes e depois do piloto |
+| 4 | **Transformar parte da receita one-shot em recorrente** como meta de negócio | 94,4% da receita depende de quem comprou uma vez só (insight 1). Cada ponto convertido reduz a dependência de aquisição, que custa de 5 a 25 vezes mais do que reter (HBR). | `[% Receitas One-shot]` abaixo de 94,4% nas coortes novas |
+
+**Como validar:** começar cada ação como piloto com grupo de controle (teste A/B), porque os dados mostram correlação, não causa. O próprio dashboard de coorte serve de painel de acompanhamento, sem construir nada novo.
 
 ---
 

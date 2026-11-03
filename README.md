@@ -34,7 +34,7 @@ Projeto de portfólio em **Business Intelligence** usando o dataset público **O
 
 ## Objetivo de negócio
 
-Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist e identificar alavancas de crescimento a partir de análise financeira, comportamental e geográfica.
+Diagnosticar o problema de **retenção de ~3%** do e-commerce Olist a partir de análise financeira, comportamental e geográfica e, com base nesse diagnóstico, **recomendar ações** para trazer o cliente de volta (ver [Recomendações](#recomendações)).
 
 ---
 

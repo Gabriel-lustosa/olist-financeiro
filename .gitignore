@@ -30,7 +30,8 @@ obj/
 .vs/
 *.bim_*.settings
 
-# === Claude Code (preferências pessoais, ficam só na máquina) ===
+# === Claude Code (instruções e preferências do agente, ficam só na máquina) ===
+CLAUDE.md
 CLAUDE.local.md
 .claude/settings.local.json
 
